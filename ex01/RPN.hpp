@@ -11,13 +11,14 @@ class RPN
 {
   public:
     RPN();
-    RPN(const RPN& other);
-    RPN& operator=(const RPN& other);
     ~RPN();
 
     void calculate(std::string input);
 
   private:
+    RPN(const RPN& other);
+    RPN& operator=(const RPN& other);
+
     bool consumeToken(const std::string& input, std::size_t& i);
     bool performOperation(const char op);
 
