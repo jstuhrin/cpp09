@@ -21,6 +21,10 @@ class RPN
 
     bool consumeToken(const std::string& input, std::size_t& i);
     bool performOperation(const char op);
+    void evaluateOutcome();
+    bool traverseWhiteSpace(std::string input, std::size_t& i);
+    bool isOperator(char c);
+    bool isValidToken(char c);
 
     std::stack<int> nums_;
 };

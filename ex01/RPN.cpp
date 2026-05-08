@@ -1,27 +1,6 @@
 
 #include "RPN.hpp"
 
-namespace
-{
-  void traverseWhiteSpace(std::string input, std::size_t& i)
-  {
-    while (std::isspace(input[i]))
-    {
-      ++i;
-    }
-  }
-
-  bool isOperator(char c)
-  {
-    return c == '+' || c == '-' || c == '*' || c == '/';
-  }
-
-  bool isValidToken(char c)
-  {
-    return std::isdigit(c) || isOperator(c);
-  }
-}
-
 
 ///////// constructors //////////
 
@@ -53,21 +32,14 @@ void RPN::calculate(std::string input)
       break;
     }
 
-    if (!std::isspace(input[i]))
+    if (!traverseWhiteSpace(input, i))
     {
       std::cerr << "ERROR: missing space\n";
       return;
     }
-
-    traverseWhiteSpace(input, i);
   }
 
-  if (nums_.size() != 1)
-  {
-    std::cerr << "ERROR\n";
-    return;
-  }
-  std::cout << nums_.top() << "\n";
+  evaluateOutcome();
 }
 
 bool RPN::consumeToken(const std::string& input, std::size_t& i)
@@ -80,12 +52,14 @@ bool RPN::consumeToken(const std::string& input, std::size_t& i)
 
   if (std::isdigit(input[i]))
   {
-    const char* current = input.data() + i;
-    char* end;
-    long val = std::strtol(current, &end, 10);
-    nums_.push(static_cast<int>(val));
+    // const char* current = input.data() + i;
+    // char* end = NULL;
+    // long val = std::strtol(current, &end, 10);
+    // nums_.push(static_cast<int>(val));
+
+    nums_.push(static_cast<int>(input[i] - '0'));
   }
-  else if (isOperator(input[i]))
+  else
   {
     if (!performOperation(input[i]))
     {
@@ -130,4 +104,42 @@ bool RPN::performOperation(const char op)
   }
   nums_.push(currentResult);
   return true;
+}
+
+void RPN::evaluateOutcome()
+{
+  if (nums_.size() < 1)
+  {
+    std::cerr << "ERROR: missing number\n";
+    return;
+  }
+  if (nums_.size() > 1)
+  {
+    std::cerr << "ERROR: missing operator\n";
+    return;
+  }
+  std::cout << nums_.top() << "\n";
+}
+
+bool RPN::traverseWhiteSpace(std::string input, std::size_t& i)
+{
+  if (input[i] != ' ')
+  {
+    return false;
+  }
+  while (input[i] == ' ')
+  {
+    ++i;
+  }
+  return true;
+}
+
+bool RPN::isOperator(char c)
+{
+  return c == '+' || c == '-' || c == '*' || c == '/';
+}
+
+bool RPN::isValidToken(char c)
+{
+  return std::isdigit(c) || isOperator(c);
 }
