@@ -57,7 +57,7 @@ bool RPN::consumeToken(const std::string& input, std::size_t& i)
     // long val = std::strtol(current, &end, 10);
     // nums_.push(static_cast<int>(val));
 
-    nums_.push(static_cast<int>(input[i] - '0'));
+    nums_.push(input[i] - static_cast<int>('0'));
   }
   else
   {
