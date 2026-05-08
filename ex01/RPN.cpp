@@ -123,14 +123,15 @@ void RPN::evaluateOutcome() const
 
 bool RPN::traverseWhiteSpace(const std::string& input, std::size_t& i)
 {
-  if (input[i] != ' ')
+  std::string::size_type first;
+  first = input.find_first_of(' ', i);
+  if (first != i)
   {
     return false;
   }
-  while (input[i] == ' ')
-  {
-    ++i;
-  }
+  std::string::size_type last;
+  last = input.find_first_not_of(' ', i);
+  i = last;
   return true;
 }
 
