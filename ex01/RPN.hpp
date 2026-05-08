@@ -13,7 +13,7 @@ class RPN
     RPN();
     ~RPN();
 
-    void calculate(std::string input);
+    void calculate(const std::string input);
 
   private:
     RPN(const RPN& other);
@@ -21,10 +21,10 @@ class RPN
 
     bool consumeToken(const std::string& input, std::size_t& i);
     bool performOperation(const char op);
-    void evaluateOutcome();
-    bool traverseWhiteSpace(std::string input, std::size_t& i);
-    bool isOperator(char c);
-    bool isValidToken(char c);
+    void evaluateOutcome() const;
+    bool traverseWhiteSpace(const std::string& input, std::size_t& i);
+    bool isOperator(const char c) const;
+    bool isValidToken(const char c) const;
 
     std::stack<int> nums_;
 };

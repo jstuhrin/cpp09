@@ -11,7 +11,7 @@ RPN::~RPN() {}
 
 ////////// methods //////////
 
-void RPN::calculate(std::string input)
+void RPN::calculate(const std::string input)
 {
   std::size_t i = 0;
   traverseWhiteSpace(input, i);
@@ -106,7 +106,7 @@ bool RPN::performOperation(const char op)
   return true;
 }
 
-void RPN::evaluateOutcome()
+void RPN::evaluateOutcome() const
 {
   if (nums_.size() < 1)
   {
@@ -121,7 +121,7 @@ void RPN::evaluateOutcome()
   std::cout << nums_.top() << "\n";
 }
 
-bool RPN::traverseWhiteSpace(std::string input, std::size_t& i)
+bool RPN::traverseWhiteSpace(const std::string& input, std::size_t& i)
 {
   if (input[i] != ' ')
   {
@@ -134,12 +134,12 @@ bool RPN::traverseWhiteSpace(std::string input, std::size_t& i)
   return true;
 }
 
-bool RPN::isOperator(char c)
+bool RPN::isOperator(const char c) const
 {
   return c == '+' || c == '-' || c == '*' || c == '/';
 }
 
-bool RPN::isValidToken(char c)
+bool RPN::isValidToken(const char c) const
 {
   return std::isdigit(c) || isOperator(c);
 }
