@@ -3,6 +3,7 @@
 #define RPN_HPP
 
 #include <stack>
+#include <list>
 #include <string>
 #include <iostream>
 #include <cstdlib>
@@ -26,7 +27,7 @@ class RPN
     bool isOperator(const char c) const;
     bool isValidToken(const char c) const;
 
-    std::stack<int> nums_;
+    std::stack<int, std::list<int> > nums_;
 };
 
 #endif
