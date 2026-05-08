@@ -8,7 +8,7 @@ class BitcoinExchange
     BitcoinExchange();
     ~BitcoinExchange();
 
-    processData();
+    void processData();
 
   private:
     BitcoinExchange(const BitcoinExchange& other);
