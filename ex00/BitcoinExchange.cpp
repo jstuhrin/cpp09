@@ -19,44 +19,89 @@ BitcoinExchange::BitcoinExchange() {}
 
 BitcoinExchange::~BitcoinExchange() {}
 
+int BitcoinExchange::runBitcoinExchange(std::string inputFileName)
+{
+  std::ifstream dataFile("data.csv");
+  if (!dataFile)
+  {
+    std::cerr << "Error: cannot open file 'data.csv'\n";
+    return 1;
+  }
 
+  std::ifstream inputFile(inputFileName.c_str());
+  if (!inputFile)
+  {
+    dataFile.close();
+    std::cerr << "Error: cannot open file '" << inputFileName << "'\n";
+    return 1;
+  }
 
-bool extractDataLine(const std::string& line)
+  std::string dataLine;
+  while (std::getline(dataFile, dataLine))
+  {
+    if (!extractDataLine(dataLine))
+    {
+      std::cerr << "Error: bad file 'data.csv'\n";
+      dataFile.close();
+      inputFile.close();
+      return 1;
+    }
+  }
+
+  std::string inputLine;
+  while (std::getline(inputFile, inputLine))
+  {
+    consumeInputLine(inputLine);
+  }
+
+  dataFile.close();
+  inputFile.close();
+
+  return 0;
+}
+
+bool BitcoinExchange::extractDataLine(const std::string& line)
 {
   std::string::size_type comma = line.find(',', 0);
   if (comma == std::string::npos)
     return false;
 
-  std::string date = line.substring(0, comma);
+  std::string date = line.substr(0, comma);
   if (!isValidDate(date))
     return false;
 
-  std::string priceStr = line.substring(comma + 1, line.size());
-  int price;
+  std::string priceStr = line.substr(comma + 1, line.size());
+  float price;
   if (!extractPrice(priceStr, price))
     return false;
 
-  std::pair<std::map<std::string, int>::iterator, bool> result;
-  result = history_.insert(date, price);
+  std::pair<std::map<std::string, float>::iterator, bool> result;
+  result = history_.insert(std::pair<std::string, float>(date, price));
   if (result.second == false)
     return false;
 
   return true;
 }
 
-void consumeInputLine(const std::string& line)
+void BitcoinExchange::consumeInputLine(const std::string& line)
 {
-  std::string::size_type delimiter = find(" | ", 0);
+  std::string::size_type delimiter = line.find(" | ", 0);
   if (delimiter == std::string::npos)
+  {
+    std::cout << "Error: bad input => " << line << "\n";
     return;
+  }
 
-  std::string date = line.substring(0, delimiter);
+  std::string date = line.substr(0, delimiter);
   if (!isValidDate(date))
+  {
+    std::cout << "Error: invalid date\n";
     return;
+  }
 
-  std::string numStr = line.substring(delimiter + 3, line.size());
+  std::string numStr = line.substr(delimiter + 3, line.size());
   float num;
-  if (!extractNum(numStr, num))
+  if (!extractNum(line, numStr, num))
     return;
 
   printLine(date, num);
@@ -88,30 +133,30 @@ bool BitcoinExchange::isValidDate(const std::string& date) const
   if (!allDigits(date, 8, 2))
     return false;
 
-  std::istringstream ss;
-  ss.str(date.substr(0, 4));
+  std::istringstream iss;
+  iss.str(date.substr(0, 4));
   int year;
-  ss >> year;
-  ss.clear();
-  ss.str(date.substr(5, 2));
+  iss >> year;
+  iss.clear();
+  iss.str(date.substr(5, 2));
   int month;
-  ss >> month;
-  ss.clear();
-  ss.str(date.substr(8, 2));
+  iss >> month;
+  iss.clear();
+  iss.str(date.substr(8, 2));
   int day;
-  ss >> day;
+  iss >> day;
 
   return isValidYear(year) && isValidMonth(month) && isValidDay(year, month, day);
 }
 
 bool BitcoinExchange::isValidYear(const long year) const
 {
-  return year >= 2009 && year <= 2022;
+  return year >= 0000 && year <= 2022;
 }
 
 bool BitcoinExchange::isValidMonth(const long month) const
 {
-  return month>= 1 && month <= 12;
+  return month >= 1 && month <= 12;
 }
 
 bool BitcoinExchange::isLeapYear(const long year) const
@@ -130,7 +175,7 @@ bool BitcoinExchange::isValidDay(const long year, const long month, const long d
     case 8:
     case 10:
     case 12:
-      return day >=1 && day <= 31;
+      return day >= 1 && day <= 31;
     case 2:
       if (isLeapYear(year))
         return day >= 1 && day <= 29;
@@ -141,29 +186,58 @@ bool BitcoinExchange::isValidDay(const long year, const long month, const long d
     case 11:
       return day >= 1 && day <= 30;
   }
+  assert(false && "invalid month in isValidDay");
+  __builtin_unreachable();
 }
 
-bool BitcoinExchange::extractPrice(const std::string& priceStr, int& price)
+bool BitcoinExchange::extractPrice(const std::string& priceStr, float& price)
 {
-  if (priceStr.size() > 4)
+  std::istringstream iss(priceStr);
+  if (iss >> price && iss.eof())
+    return true;
+  return false;
+}
+
+bool BitcoinExchange::extractNum(const std::string& line, const std::string& numStr, float& num)
+{
+  std::istringstream iss(numStr);
+  if (!(iss >> num && iss.eof()))
+  {
+    std::cout << "Error: bad input => " << line << "\n";
     return false;
+  }
 
-  if (!allDigits(priceStr, 0, priceStr.size()))
+  if (num < 0)
+  {
+    std::cout << "Error: not a positive number\n";
     return false;
+  }
 
-  std::istringstream ss(priceStr);
-  ss >> price;
+  if (num > 1000)
+  {
+    std::cout << "Error: number too large\n";
+    return false;
+  }
 
-  return price >= 0 && price <= 1000;
+  return true;
 }
 
-bool BitcoinExchange::extractNum()
+void BitcoinExchange::printLine(const std::string& date, const float& num)
 {
+  float value = 0;
+  std::map<std::string, float>::iterator it = history_.lower_bound(date);
+  
+  if (it == history_.begin())
+  {
+    std::cout << "Error: date too early\n";
+    return;
+  }
+  
+  if (it->first != date)
+  {
+    --it;
+  }
 
-}
-
-void BitcoinExchange::printLine(const std::string& date, const float num)
-{
-  // todo: calculate value
+  value = it->second * num;
   std::cout << date << " => " << num << " = " << value << "\n";
 }
