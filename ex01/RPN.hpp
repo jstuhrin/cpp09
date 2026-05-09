@@ -6,6 +6,7 @@
 #include <list>
 #include <string>
 #include <iostream>
+#include <climits>
 
 class RPN
 {
@@ -13,7 +14,7 @@ class RPN
     RPN();
     ~RPN();
 
-    void calculate(const std::string input);
+    int calculate(const std::string input);
 
   private:
     RPN(const RPN& other);
@@ -21,7 +22,7 @@ class RPN
 
     bool consumeToken(const std::string& input, std::size_t& i);
     bool performOperation(const char op);
-    void evaluateOutcome() const;
+    bool evaluateOutcome();
     bool traverseWhiteSpace(const std::string& input, std::size_t& i);
     bool isOperator(const char c) const;
     bool isValidToken(const char c) const;

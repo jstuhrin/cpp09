@@ -11,7 +11,7 @@ RPN::~RPN() {}
 
 ////////// methods //////////
 
-void RPN::calculate(const std::string input)
+int RPN::calculate(const std::string input)
 {
   std::size_t i = 0;
   traverseWhiteSpace(input, i);
@@ -23,7 +23,7 @@ void RPN::calculate(const std::string input)
     }
     if (!consumeToken(input, i))
     {
-      return;
+      return 1;
     }
     if (input[i] == '\0')
     {
@@ -32,10 +32,14 @@ void RPN::calculate(const std::string input)
     if (!traverseWhiteSpace(input, i))
     {
       std::cerr << "ERROR: missing space\n";
-      return;
+      return 1;
     }
   }
-  evaluateOutcome();
+  if (!evaluateOutcome())
+  {
+    return 1;
+  }
+  return 0;
 }
 
 bool RPN::consumeToken(const std::string& input, std::size_t& i)
@@ -71,24 +75,39 @@ bool RPN::performOperation(const char op)
   nums_.pop();
   int first = nums_.top();
   nums_.pop();
-  if (op == '/' && second == 0)
-  {
-    std::cerr << "ERROR: division by zero\n";
-    return false;
-  }
   int currentResult = 0;
   switch (op)
   {
     case '+':
+      if (first > INT_MAX - second)
+      {
+        std::cerr << "ERROR: int overflow\n";
+        return false;
+      }
       currentResult = first + second;
       break;
     case '-':
+      if (first < INT_MIN + second)
+      {
+        std::cerr << "ERROR: int underflow\n";
+        return false;
+      }
       currentResult = first - second;
       break;
     case '*':
+      if (first > INT_MAX / second || first < INT_MIN / second)
+      {
+        std::cerr << "ERROR: int overflow/underflow\n";
+        return false;
+      }
       currentResult = first * second;
       break;
     case '/':
+      if (second == 0)
+      {
+        std::cerr << "ERROR: division by zero\n";
+        return false;
+      }
       currentResult = first / second;
       break;
   }
@@ -96,19 +115,21 @@ bool RPN::performOperation(const char op)
   return true;
 }
 
-void RPN::evaluateOutcome() const
+bool RPN::evaluateOutcome()
 {
   if (nums_.size() < 1)
   {
     std::cerr << "ERROR: missing number\n";
-    return;
+    return false;
   }
   if (nums_.size() > 1)
   {
     std::cerr << "ERROR: missing operator\n";
-    return;
+    return false;
   }
   std::cout << nums_.top() << "\n";
+  nums_.pop();
+  return true;
 }
 
 bool RPN::traverseWhiteSpace(const std::string& input, std::size_t& i)
