@@ -21,24 +21,20 @@ void RPN::calculate(const std::string input)
     {
       break;
     }
-
     if (!consumeToken(input, i))
     {
       return;
     }
-
     if (input[i] == '\0')
     {
       break;
     }
-
     if (!traverseWhiteSpace(input, i))
     {
       std::cerr << "ERROR: missing space\n";
       return;
     }
   }
-
   evaluateOutcome();
 }
 
@@ -49,15 +45,9 @@ bool RPN::consumeToken(const std::string& input, std::size_t& i)
     std::cerr << "ERROR: invalid token\n";
     return false;
   }
-
   if (std::isdigit(input[i]))
   {
-    // const char* current = input.data() + i;
-    // char* end = NULL;
-    // long val = std::strtol(current, &end, 10);
-    // nums_.push(static_cast<int>(val));
-
-    nums_.push(input[i] - static_cast<int>('0'));
+    nums_.push(input[i] - '0');
   }
   else
   {
@@ -131,7 +121,7 @@ bool RPN::traverseWhiteSpace(const std::string& input, std::size_t& i)
   }
   std::string::size_type last;
   last = input.find_first_not_of(' ', i);
-  i = last;
+  i = last == std::string::npos ? input.size() : last;
   return true;
 }
 
