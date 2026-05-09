@@ -6,7 +6,7 @@
 #include <list>
 #include <string>
 #include <iostream>
-#include <climits>
+#include <limits>
 
 class RPN
 {

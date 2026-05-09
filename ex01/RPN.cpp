@@ -79,7 +79,7 @@ bool RPN::performOperation(const char op)
   switch (op)
   {
     case '+':
-      if (first > INT_MAX - second)
+      if (first > std::numeric_limits<int>::max() - second)
       {
         std::cerr << "ERROR: int overflow\n";
         return false;
@@ -87,7 +87,7 @@ bool RPN::performOperation(const char op)
       currentResult = first + second;
       break;
     case '-':
-      if (first < INT_MIN + second)
+      if (first < std::numeric_limits<int>::min() + second)
       {
         std::cerr << "ERROR: int underflow\n";
         return false;
@@ -95,7 +95,7 @@ bool RPN::performOperation(const char op)
       currentResult = first - second;
       break;
     case '*':
-      if (first > INT_MAX / second || first < INT_MIN / second)
+      if (first > std::numeric_limits<int>::max() / second || first < std::numeric_limits<int>::min() / second)
       {
         std::cerr << "ERROR: int overflow/underflow\n";
         return false;
