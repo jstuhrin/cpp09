@@ -86,14 +86,14 @@ void BitcoinExchange::consumeInputLine(const std::string& line)
   std::string::size_type delimiter = line.find(" | ", 0);
   if (delimiter == std::string::npos)
   {
-    std::cout << "Error: bad input => " << line << "\n";
+    std::cerr << "Error: bad input => " << line << "\n";
     return;
   }
 
   std::string date = line.substr(0, delimiter);
   if (!isValidDate(date))
   {
-    std::cout << "Error: invalid date\n";
+    std::cerr << "Error: invalid date\n";
     return;
   }
 
@@ -201,19 +201,19 @@ bool BitcoinExchange::extractNum(const std::string& line, const std::string& num
   std::istringstream iss(numStr);
   if (!(iss >> num && iss.eof()))
   {
-    std::cout << "Error: bad input => " << line << "\n";
+    std::cerr << "Error: bad input => " << line << "\n";
     return false;
   }
 
   if (num < 0)
   {
-    std::cout << "Error: not a positive number\n";
+    std::cerr << "Error: not a positive number\n";
     return false;
   }
 
   if (num > 1000)
   {
-    std::cout << "Error: number too large\n";
+    std::cerr << "Error: number too large\n";
     return false;
   }
 
@@ -227,7 +227,7 @@ void BitcoinExchange::printLine(const std::string& date, const double& num)
   
   if (it == history_.begin())
   {
-    std::cout << "Error: date too early\n";
+    std::cerr << "Error: date too early\n";
     return;
   }
   
