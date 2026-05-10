@@ -66,7 +66,7 @@ bool BitcoinExchange::extractDataLine(const std::string& line)
   if (!isValidDate(date))
     return false;
 
-  std::string priceStr = line.substr(comma + 1, line.size());
+  std::string priceStr = line.substr(comma + 1);
   double price;
   if (!extractPrice(priceStr, price))
     return false;
@@ -97,7 +97,7 @@ void BitcoinExchange::consumeInputLine(const std::string& line)
     return;
   }
 
-  std::string numStr = line.substr(delimiter + 3, line.size());
+  std::string numStr = line.substr(delimiter + 3);
   double num;
   if (!extractNum(line, numStr, num))
     return;
