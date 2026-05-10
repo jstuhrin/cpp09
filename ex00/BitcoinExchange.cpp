@@ -1,11 +1,11 @@
 
 /*
-Syntactical validity:
+Syntactical validity of data and input files:
 
 data.csv LINE: DATE COMMA PRICE
 input.txt LINE: DATE SPACE '|' SPACE PRICE
 DATE: YEAR '-' MONTH '-' DAY
-YEAR: [2009,2022]
+YEAR: [0000,2022]
 MONTH: [1,12]
 DAY: if MONTH in {1,3,5,7,8,10,12}: [1,31]
      if MONTH in {2}: if YEAR % 400 == 0 or (YEAR % 100 != 0 and YEAR % 4 == 0) : 29 else: [1,28]
