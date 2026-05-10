@@ -113,8 +113,7 @@ int BitcoinExchange::consumeInputLine(const std::string& line)
   if (!extractNum(line, numStr, num))
     return 1;
 
-  printLine(date, num);
-  return 0;
+  return printLine(date, num);
 }
 
 bool BitcoinExchange::allDigits(const std::string& str, const std::size_t start, const std::size_t size) const
@@ -232,7 +231,7 @@ bool BitcoinExchange::extractNum(const std::string& line, const std::string& num
   return true;
 }
 
-void BitcoinExchange::printLine(const std::string& date, const double& num)
+int BitcoinExchange::printLine(const std::string& date, const double& num)
 {
   double value = 0;
   std::map<std::string, double>::iterator it = history_.lower_bound(date);
@@ -240,7 +239,7 @@ void BitcoinExchange::printLine(const std::string& date, const double& num)
   if (it == history_.begin() && it->first != date)
   {
     std::cerr << "Error: date too early\n";
-    return;
+    return 1;
   }
   
   if (it->first != date)
@@ -251,9 +250,11 @@ void BitcoinExchange::printLine(const std::string& date, const double& num)
   if (it->second > std::numeric_limits<double>::max() / num)
   {
     std::cerr << "Error: result of multiplication overflows: " << it->second << " * " << num << "\n";
-    return;
+    return 1;
   }
 
   value = it->second * num;
   std::cout << date << " => " << num << " = " << std::setprecision(10) << value << "\n";
+
+  return 0;
 }

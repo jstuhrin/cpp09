@@ -34,7 +34,7 @@ class BitcoinExchange
     bool isValidDay(const int year, const int month, const int day) const;
     bool extractPrice(const std::string& priceStr, double& price);
     bool extractNum(const std::string& line, const std::string& numStr, double& num);
-    void printLine(const std::string& date, const double& num);
+    int printLine(const std::string& date, const double& num);
 
     const std::string dataFileName_;
     std::map<std::string, double> history_;
