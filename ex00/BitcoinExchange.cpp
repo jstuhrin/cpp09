@@ -32,7 +32,7 @@ int BitcoinExchange::runBitcoinExchange(std::string inputFileName)
   std::getline(dataFile, dataLine);
   if (dataLine != "date,price")
   {
-    std::cerr << "Error: bad file: " << dataFileName_ << "\n";
+    std::cerr << "Error: missing header line: " << dataFileName_ << "\n";
     return 1;
   }
   while (std::getline(dataFile, dataLine))
@@ -115,7 +115,7 @@ int BitcoinExchange::consumeInputLine(const std::string& line)
   return 0;
 }
 
-bool BitcoinExchange::allDigits(const std::string& str, const size_t start, const size_t size) const
+bool BitcoinExchange::allDigits(const std::string& str, const std::size_t start, const std::size_t size) const
 {
   for (size_t i = start; i < size; ++i)
   {
@@ -157,22 +157,22 @@ bool BitcoinExchange::isValidDate(const std::string& date) const
   return isValidYear(year) && isValidMonth(month) && isValidDay(year, month, day);
 }
 
-bool BitcoinExchange::isValidYear(const long year) const
+bool BitcoinExchange::isValidYear(const int year) const
 {
   return year >= 0000 && year <= 2022;
 }
 
-bool BitcoinExchange::isValidMonth(const long month) const
+bool BitcoinExchange::isValidMonth(const int month) const
 {
   return month >= 1 && month <= 12;
 }
 
-bool BitcoinExchange::isLeapYear(const long year) const
+bool BitcoinExchange::isLeapYear(const int year) const
 {
   return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 }
 
-bool BitcoinExchange::isValidDay(const long year, const long month, const long day) const
+bool BitcoinExchange::isValidDay(const int year, const int month, const int day) const
 {
   switch (month)
   {

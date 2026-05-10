@@ -26,12 +26,12 @@ class BitcoinExchange
 
     bool extractDataLine(const std::string& line);
     int consumeInputLine(const std::string& line);
-    bool allDigits(const std::string& str, const size_t start, const size_t size) const;
+    bool allDigits(const std::string& str, const std::size_t start, const std::size_t size) const;
     bool isValidDate(const std::string& date) const;
-    bool isValidYear(const long year) const;
-    bool isValidMonth(const long month) const;
-    bool isLeapYear(const long year) const;
-    bool isValidDay(const long year, const long month, const long day) const;
+    bool isValidYear(const int year) const;
+    bool isValidMonth(const int month) const;
+    bool isLeapYear(const int year) const;
+    bool isValidDay(const int year, const int month, const int day) const;
     bool extractPrice(const std::string& priceStr, double& price);
     bool extractNum(const std::string& line, const std::string& numStr, double& num);
     void printLine(const std::string& date, const double& num);
