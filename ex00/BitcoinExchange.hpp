@@ -8,6 +8,8 @@
 #include <cassert>
 #include <fstream>
 #include <sstream>
+#include <limits>
+#include <iomanip>
 
 
 class BitcoinExchange

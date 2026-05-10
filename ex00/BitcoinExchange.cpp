@@ -15,7 +15,7 @@ PRICE: [0,1000]
 
 #include "BitcoinExchange.hpp"
 
-BitcoinExchange::BitcoinExchange() : dataFileName_("data.csv") {}
+BitcoinExchange::BitcoinExchange() : dataFileName_("data.csv"), hasError_(false) {}
 
 BitcoinExchange::~BitcoinExchange() {}
 
@@ -225,7 +225,7 @@ void BitcoinExchange::printLine(const std::string& date, const double& num)
   double value = 0;
   std::map<std::string, double>::iterator it = history_.lower_bound(date);
   
-  if (it == history_.begin())
+  if (it == history_.begin() && it->first != date)
   {
     std::cerr << "Error: date too early\n";
     return;
@@ -236,6 +236,11 @@ void BitcoinExchange::printLine(const std::string& date, const double& num)
     --it;
   }
 
+  if (it->second > std::numeric_limits<double>::max() / num)
+  {
+    std::cerr << "Error: result of multiplication overflows: " << it->second << " * " << num << "\n";
+    return;
+  }
   value = it->second * num;
-  std::cout << date << " => " << num << " = " << value << "\n";
+  std::cout << date << " => " << num << " = " << std::setprecision(10) << value << "\n";
 }
