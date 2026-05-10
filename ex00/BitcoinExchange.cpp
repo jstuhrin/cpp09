@@ -1,6 +1,8 @@
 
 /*
 Syntactical validity of data and input files:
+data.csv HEADER LINE: 'date,price'
+input.txt HEADER LINE: 'date | value'
 
 data.csv LINE: DATE COMMA PRICE
 input.txt LINE: DATE SPACE '|' SPACE NUM
