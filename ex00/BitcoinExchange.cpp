@@ -3,14 +3,14 @@
 Syntactical validity of data and input files:
 
 data.csv LINE: DATE COMMA PRICE
-input.txt LINE: DATE SPACE '|' SPACE PRICE
+input.txt LINE: DATE SPACE '|' SPACE NUM
 DATE: YEAR '-' MONTH '-' DAY
 YEAR: [0000,2022]
 MONTH: [1,12]
 DAY: if MONTH in {1,3,5,7,8,10,12}: [1,31]
-     if MONTH in {2}: if YEAR % 400 == 0 or (YEAR % 100 != 0 and YEAR % 4 == 0) : 29 else: [1,28]
+     if MONTH in {2}: if YEAR % 400 == 0 or (YEAR % 100 != 0 and YEAR % 4 == 0) : [1,29] else: [1,28]
      if MONTH in {4,6,9,11}: [1,30]
-PRICE: [0,1000]
+NUM: [0,1000]
 */
 
 #include "BitcoinExchange.hpp"
@@ -28,36 +28,47 @@ int BitcoinExchange::runBitcoinExchange(std::string inputFileName)
     return 1;
   }
 
-  std::ifstream inputFile(inputFileName.c_str());
-  if (!inputFile)
+  std::string dataLine;
+  std::getline(dataFile, dataLine);
+  if (dataLine != "date,price")
   {
-    std::cerr << "Error: cannot open file '" << inputFileName << "'\n";
+    std::cerr << "Error: bad file: " << dataFileName_ << "\n";
     return 1;
   }
-
-  std::string dataLine;
   while (std::getline(dataFile, dataLine))
   {
     if (!extractDataLine(dataLine))
     {
-      std::cerr << "Error: bad file " << dataFileName_ << "\n";
+      std::cerr << "Error: bad file: " << dataFileName_ << "\n";
       return 1;
     }
   }
 
-  std::string inputLine;
-  while (std::getline(inputFile, inputLine))
+  std::ifstream inputFile(inputFileName.c_str());
+  if (!inputFile)
   {
-    consumeInputLine(inputLine);
+    std::cerr << "Error: cannot open file: " << inputFileName << "\n";
+    return 1;
   }
 
-  return 0;
+  std::string inputLine;
+  std::getline(inputFile, inputLine);
+  if (inputLine != "date | value")
+  {
+    std::cerr << "Error: missing header line: " << inputFileName << "\n";
+    return 1;
+  }
+  int errorInputFile = 0;
+  while (std::getline(inputFile, inputLine))
+  {
+    errorInputFile = consumeInputLine(inputLine) || errorInputFile;
+  }
+
+  return errorInputFile;
 }
 
 bool BitcoinExchange::extractDataLine(const std::string& line)
 {
-  if (line == "date,price")
-    return true;
   std::string::size_type comma = line.find(',', 0);
   if (comma == std::string::npos)
     return false;
@@ -79,30 +90,29 @@ bool BitcoinExchange::extractDataLine(const std::string& line)
   return true;
 }
 
-void BitcoinExchange::consumeInputLine(const std::string& line)
+int BitcoinExchange::consumeInputLine(const std::string& line)
 {
-  if (line == "date | value")
-    return;
   std::string::size_type delimiter = line.find(" | ", 0);
   if (delimiter == std::string::npos)
   {
     std::cerr << "Error: bad input => " << line << "\n";
-    return;
+    return 1;
   }
 
   std::string date = line.substr(0, delimiter);
   if (!isValidDate(date))
   {
     std::cerr << "Error: invalid date\n";
-    return;
+    return 1;
   }
 
   std::string numStr = line.substr(delimiter + 3);
   double num;
   if (!extractNum(line, numStr, num))
-    return;
+    return 1;
 
   printLine(date, num);
+  return 0;
 }
 
 bool BitcoinExchange::allDigits(const std::string& str, const size_t start, const size_t size) const
@@ -241,6 +251,7 @@ void BitcoinExchange::printLine(const std::string& date, const double& num)
     std::cerr << "Error: result of multiplication overflows: " << it->second << " * " << num << "\n";
     return;
   }
+
   value = it->second * num;
   std::cout << date << " => " << num << " = " << std::setprecision(10) << value << "\n";
 }
