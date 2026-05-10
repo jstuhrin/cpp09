@@ -31,7 +31,6 @@ int BitcoinExchange::runBitcoinExchange(std::string inputFileName)
   std::ifstream inputFile(inputFileName.c_str());
   if (!inputFile)
   {
-    dataFile.close();
     std::cerr << "Error: cannot open file '" << inputFileName << "'\n";
     return 1;
   }
@@ -42,8 +41,6 @@ int BitcoinExchange::runBitcoinExchange(std::string inputFileName)
     if (!extractDataLine(dataLine))
     {
       std::cerr << "Error: bad file " << dataFileName_ << "\n";
-      dataFile.close();
-      inputFile.close();
       return 1;
     }
   }
@@ -53,9 +50,6 @@ int BitcoinExchange::runBitcoinExchange(std::string inputFileName)
   {
     consumeInputLine(inputLine);
   }
-
-  dataFile.close();
-  inputFile.close();
 
   return 0;
 }
