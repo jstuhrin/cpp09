@@ -30,11 +30,12 @@ class BitcoinExchange
     bool isValidMonth(const long month) const;
     bool isLeapYear(const long year) const;
     bool isValidDay(const long year, const long month, const long day) const;
-    bool extractPrice(const std::string& priceStr, float& price);
-    bool extractNum(const std::string& line, const std::string& numStr, float& num);
-    void printLine(const std::string& date, const float& num);
+    bool extractPrice(const std::string& priceStr, double& price);
+    bool extractNum(const std::string& line, const std::string& numStr, double& num);
+    void printLine(const std::string& date, const double& num);
 
-    std::map<std::string, float> history_;
+    const std::string dataFileName_;
+    std::map<std::string, double> history_;
 };
 
 #endif

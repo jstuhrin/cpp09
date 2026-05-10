@@ -15,16 +15,16 @@ PRICE: [0,1000]
 
 #include "BitcoinExchange.hpp"
 
-BitcoinExchange::BitcoinExchange() {}
+BitcoinExchange::BitcoinExchange() : dataFileName_("data.csv") {}
 
 BitcoinExchange::~BitcoinExchange() {}
 
 int BitcoinExchange::runBitcoinExchange(std::string inputFileName)
 {
-  std::ifstream dataFile("data.csv");
+  std::ifstream dataFile(dataFileName_.c_str());
   if (!dataFile)
   {
-    std::cerr << "Error: cannot open file 'data.csv'\n";
+    std::cerr << "Error: cannot open file " << dataFileName_ << "\n";
     return 1;
   }
 
@@ -41,7 +41,7 @@ int BitcoinExchange::runBitcoinExchange(std::string inputFileName)
   {
     if (!extractDataLine(dataLine))
     {
-      std::cerr << "Error: bad file 'data.csv'\n";
+      std::cerr << "Error: bad file " << dataFileName_ << "\n";
       dataFile.close();
       inputFile.close();
       return 1;
@@ -62,6 +62,8 @@ int BitcoinExchange::runBitcoinExchange(std::string inputFileName)
 
 bool BitcoinExchange::extractDataLine(const std::string& line)
 {
+  if (line == "date,price")
+    return true;
   std::string::size_type comma = line.find(',', 0);
   if (comma == std::string::npos)
     return false;
@@ -71,12 +73,12 @@ bool BitcoinExchange::extractDataLine(const std::string& line)
     return false;
 
   std::string priceStr = line.substr(comma + 1, line.size());
-  float price;
+  double price;
   if (!extractPrice(priceStr, price))
     return false;
 
-  std::pair<std::map<std::string, float>::iterator, bool> result;
-  result = history_.insert(std::pair<std::string, float>(date, price));
+  std::pair<std::map<std::string, double>::iterator, bool> result;
+  result = history_.insert(std::pair<std::string, double>(date, price));
   if (result.second == false)
     return false;
 
@@ -85,6 +87,8 @@ bool BitcoinExchange::extractDataLine(const std::string& line)
 
 void BitcoinExchange::consumeInputLine(const std::string& line)
 {
+  if (line == "date | value")
+    return;
   std::string::size_type delimiter = line.find(" | ", 0);
   if (delimiter == std::string::npos)
   {
@@ -100,7 +104,7 @@ void BitcoinExchange::consumeInputLine(const std::string& line)
   }
 
   std::string numStr = line.substr(delimiter + 3, line.size());
-  float num;
+  double num;
   if (!extractNum(line, numStr, num))
     return;
 
@@ -190,7 +194,7 @@ bool BitcoinExchange::isValidDay(const long year, const long month, const long d
   __builtin_unreachable();
 }
 
-bool BitcoinExchange::extractPrice(const std::string& priceStr, float& price)
+bool BitcoinExchange::extractPrice(const std::string& priceStr, double& price)
 {
   std::istringstream iss(priceStr);
   if (iss >> price && iss.eof())
@@ -198,7 +202,7 @@ bool BitcoinExchange::extractPrice(const std::string& priceStr, float& price)
   return false;
 }
 
-bool BitcoinExchange::extractNum(const std::string& line, const std::string& numStr, float& num)
+bool BitcoinExchange::extractNum(const std::string& line, const std::string& numStr, double& num)
 {
   std::istringstream iss(numStr);
   if (!(iss >> num && iss.eof()))
@@ -222,10 +226,10 @@ bool BitcoinExchange::extractNum(const std::string& line, const std::string& num
   return true;
 }
 
-void BitcoinExchange::printLine(const std::string& date, const float& num)
+void BitcoinExchange::printLine(const std::string& date, const double& num)
 {
-  float value = 0;
-  std::map<std::string, float>::iterator it = history_.lower_bound(date);
+  double value = 0;
+  std::map<std::string, double>::iterator it = history_.lower_bound(date);
   
   if (it == history_.begin())
   {
