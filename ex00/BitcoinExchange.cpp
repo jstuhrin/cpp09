@@ -15,7 +15,7 @@ PRICE: [0,1000]
 
 #include "BitcoinExchange.hpp"
 
-BitcoinExchange::BitcoinExchange() : dataFileName_("data.csv"), hasError_(false) {}
+BitcoinExchange::BitcoinExchange() : dataFileName_("data.csv") {}
 
 BitcoinExchange::~BitcoinExchange() {}
 
