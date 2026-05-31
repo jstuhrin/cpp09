@@ -1,40 +1,40 @@
 
 #include "RPN.hpp"
 
-
 ///////// constructors //////////
 
 RPN::RPN() {}
 
 RPN::~RPN() {}
 
-
 ////////// methods //////////
 
 int RPN::calculate(const std::string input)
 {
   std::size_t i = 0;
-  traverseWhiteSpace(input, i);
+
+  acceptWhiteSpace(input, i);
+
   while (true)
   {
-    if (input[i] == '\0')
+    if (i == input.size())
     {
       break;
     }
-    if (!consumeToken(input, i))
+    if (!expectToken(input, i))
     {
       return 1;
     }
-    if (input[i] == '\0')
+    if (i == input.size())
     {
       break;
     }
-    if (!traverseWhiteSpace(input, i))
+    if (!expectWhiteSpace(input, i))
     {
-      std::cerr << "ERROR: missing space\n";
       return 1;
     }
   }
+
   if (!evaluateOutcome())
   {
     return 1;
@@ -42,23 +42,23 @@ int RPN::calculate(const std::string input)
   return 0;
 }
 
-bool RPN::consumeToken(const std::string& input, std::size_t& i)
+bool RPN::expectToken(const std::string& input, std::size_t& i)
 {
-  if (!isValidToken(input[i]))
-  {
-    std::cerr << "ERROR: invalid token\n";
-    return false;
-  }
-  if (std::isdigit(input[i]))
+  if (std::isdigit(static_cast<unsigned char>(input[i])))
   {
     nums_.push(input[i] - '0');
   }
-  else
+  else if (input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/')
   {
     if (!performOperation(input[i]))
     {
       return false;
     }
+  }
+  else
+  {
+    std::cerr << "ERROR: invalid token\n";
+    return false;
   }
   ++i;
   return true;
@@ -71,36 +71,37 @@ bool RPN::performOperation(const char op)
     std::cerr << "ERROR: missing number value before operator\n";
     return false; 
   }
-  int second = nums_.top();
+
+  long second = nums_.top();
   nums_.pop();
-  int first = nums_.top();
+  long first = nums_.top();
   nums_.pop();
-  int currentResult = 0;
+
   switch (op)
   {
     case '+':
-      if (first > std::numeric_limits<int>::max() - second)
+      if (first > std::numeric_limits<long>::max() - second)
       {
         std::cerr << "ERROR: int overflow\n";
         return false;
       }
-      currentResult = first + second;
+      nums_.push(first + second);
       break;
     case '-':
-      if (first < std::numeric_limits<int>::min() + second)
+      if (first < std::numeric_limits<long>::min() + second)
       {
         std::cerr << "ERROR: int underflow\n";
         return false;
       }
-      currentResult = first - second;
+      nums_.push(first - second);
       break;
     case '*':
-      if (first > std::numeric_limits<int>::max() / second || first < std::numeric_limits<int>::min() / second)
+      if (first > std::numeric_limits<long>::max() / second || first < std::numeric_limits<long>::min() / second)
       {
         std::cerr << "ERROR: int overflow/underflow\n";
         return false;
       }
-      currentResult = first * second;
+      nums_.push(first * second);
       break;
     case '/':
       if (second == 0)
@@ -108,10 +109,9 @@ bool RPN::performOperation(const char op)
         std::cerr << "ERROR: division by zero\n";
         return false;
       }
-      currentResult = first / second;
+      nums_.push(first / second);
       break;
   }
-  nums_.push(currentResult);
   return true;
 }
 
@@ -132,26 +132,26 @@ bool RPN::evaluateOutcome()
   return true;
 }
 
-bool RPN::traverseWhiteSpace(const std::string& input, std::size_t& i)
+bool RPN::expectWhiteSpace(const std::string& input, std::size_t& i)
 {
-  std::string::size_type first;
-  first = input.find_first_of(' ', i);
-  if (first != i)
+  if (!acceptWhiteSpace(input, i))
   {
+    std::cerr << "ERROR: missing space\n";
     return false;
   }
-  std::string::size_type last;
-  last = input.find_first_not_of(' ', i);
-  i = last == std::string::npos ? input.size() : last;
   return true;
 }
 
-bool RPN::isOperator(const char c) const
+bool RPN::acceptWhiteSpace(const std::string& input, std::size_t& i)
 {
-  return c == '+' || c == '-' || c == '*' || c == '/';
-}
-
-bool RPN::isValidToken(const char c) const
-{
-  return std::isdigit(c) || isOperator(c);
+  if (!std::isspace(static_cast<unsigned char>(input[i])))
+  {
+    return false;
+  }
+  i = input.find_first_not_of(" \f\n\r\t\v", i);
+  if (i == std::string::npos)
+  {
+    i = input.size();
+  }
+  return true;
 }
