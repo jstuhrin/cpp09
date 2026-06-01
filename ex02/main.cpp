@@ -1,4 +1,6 @@
 
+#include <iostream>
+
 #include "PmergeMe.hpp"
 
 int main(int argc, char** argv)
@@ -9,11 +11,16 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  PmergeMe pmergeMe(argc, argv);
+  PmergeMe pmergeMe;
 
-  pmergeMe.FordJohnsonList();
+  if (!pmergeMe.populate(argc, argv))
+  {
+    return 1;
+  }
 
-  pmergeMe.FordJohnsonDeque();
+  // pmergeMe.FordJohnsonList();
+
+  // pmergeMe.FordJohnsonDeque();
 
   return 0;
 }
