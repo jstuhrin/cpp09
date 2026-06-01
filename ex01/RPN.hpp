@@ -3,7 +3,7 @@
 #define RPN_HPP
 
 #include <stack>
-#include <list>
+#include <vector>
 #include <string>
 #include <iostream>
 #include <limits>
@@ -26,7 +26,7 @@ class RPN
     bool expectWhiteSpace(const std::string& input, std::size_t& i);
     bool acceptWhiteSpace(const std::string& input, std::size_t& i);
 
-    std::stack<long, std::list<long> > nums_;
+    std::stack<long, std::vector<long> > nums_;
 };
 
 #endif
