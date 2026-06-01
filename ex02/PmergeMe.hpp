@@ -11,6 +11,9 @@ class PmergeMe
   private:
     PmergeMe(const PmergeMe& other);
     PmergeMe& operator=(const PmergeMe& other);
+
+    std::deque<int> deq_;
+    std::list<int> list_;
 };
 
 #endif
