@@ -30,3 +30,33 @@ bool PmergeMe::populate(int argc, char** argv)
   }
   return true;
 }
+
+void PmergeMe::fordJohnsonDeque()
+{
+
+}
+
+void PmergeMe::pairWiseSortDeque()
+{
+
+}
+
+void PmergeMe::binaryInsertionDeque()
+{
+
+}
+
+void PmergeMe::fordJohnsonList()
+{
+
+}
+
+void PmergeMe::pairWiseSortList()
+{
+
+}
+
+void PmergeMe::binaryInsertionList()
+{
+
+}

@@ -11,14 +11,20 @@ class PmergeMe
     PmergeMe();
     ~PmergeMe();
 
-    bool populate(int argc, char** argv);
-
   private:
-    PmergeMe(const PmergeMe& other);
-    PmergeMe& operator=(const PmergeMe& other);
+    bool populate(int argc, char** argv);
+    void fordJohnsonDeque();
+    void pairWiseSortDeque();
+    void binaryInsertionDeque();
+    void fordJohnsonList();
+    void pairWiseSortList();
+    void binaryInsertionList();
 
     std::deque<int> deq_;
     std::list<int> list_;
+
+    PmergeMe(const PmergeMe& other); // private and not implemented, since there is no reason to make a copy
+    PmergeMe& operator=(const PmergeMe& other);
 };
 
 #endif

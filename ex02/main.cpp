@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 
   // pmergeMe.FordJohnsonList();
 
-  // pmergeMe.FordJohnsonDeque();
+  pmergeMe.FordJohnsonDeque();
 
   return 0;
 }
