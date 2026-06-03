@@ -8,7 +8,7 @@ SRCS = BitcoinExchange.cpp \
 
 OBJS = $(SRCS:.cpp=.o)
 
-%.o: %.cpp
+%.o: %.cpp BitcoinExchange.hpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)
