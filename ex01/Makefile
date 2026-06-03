@@ -8,10 +8,16 @@ SRCS = main.cpp \
 
 OBJS = $(SRCS:.cpp=.o)
 
-%.o:%.cpp
+TYPE ?= long
+
+ifeq ($(TYPE), double)
+	CXXFLAGS += -DUSE_DOUBLE
+endif
+
+%.o:%.cpp RPN.hpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(NAME):$(OBJS)
+$(NAME): $(OBJS)
 	$(CXX) $^ -o $@
 
 all: $(NAME)
