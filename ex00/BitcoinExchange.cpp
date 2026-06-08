@@ -142,18 +142,18 @@ bool BitcoinExchange::isValidDate(const std::string& date) const
   if (!allDigits(date, 8, 2))
     return false;
 
-  std::istringstream iss;
-  iss.str(date.substr(0, 4));
+  std::stringstream ss;
+  ss.write(date.data(), 4);
   int year;
-  iss >> year;
-  iss.clear();
-  iss.str(date.substr(5, 2));
+  ss >> year;
+  ss.clear();
+  ss.write(date.data() + 5, 2);
   int month;
-  iss >> month;
-  iss.clear();
-  iss.str(date.substr(8, 2));
+  ss >> month;
+  ss.clear();
+  ss.write(date.data() + 8, 2);
   int day;
-  iss >> day;
+  ss >> day;
 
   return isValidYear(year) && isValidMonth(month) && isValidDay(year, month, day);
 }
