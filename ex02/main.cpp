@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <stdexcept>
 
 #include "PmergeMe.hpp"
 
@@ -11,16 +12,18 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  PmergeMe pmergeMe;
-
-  if (!pmergeMe.populate(argc, argv))
+  try
   {
-    return 1;
+    PmergeMe pmergeMe(argc, argv);
+  }
+  catch (const std::exception &e)
+  {
+    std::cerr << "Error: " << e.what() << std::endl;
   }
 
   // pmergeMe.FordJohnsonList();
 
-  pmergeMe.FordJohnsonDeque();
+  // pmergeMe.FordJohnsonDeque();
 
   return 0;
 }

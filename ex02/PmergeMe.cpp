@@ -3,32 +3,32 @@
 
 #include <string>
 #include <sstream>
+#include <stdexcept>
 
 #include <iostream>
 
-PmergeMe::PmergeMe() {}
+PmergeMe::PmergeMe(int argc, char** argv)
+{
+  populate(argc, argv);
+}
 
 PmergeMe::~PmergeMe() {}
 
 
-bool PmergeMe::populate(int argc, char** argv)
+void PmergeMe::populate(int argc, char** argv)
 {
-  std::istringstream iss;
   for (int i = 1; i < argc; ++i)
   {
     int current = 0;
-    iss.str(std::string(argv[i]));
+    std::istringstream iss(argv[i]);
     iss >> current;
     if (iss.fail() || !iss.eof() || current < 0)
     {
-      std::cerr << "Error: invalid input: " << argv[i] << '\n';
-      return false;
+      throw std::runtime_error(std::string("invalid input: ") + argv[i]);
     }
     list_.push_back(current);
     deq_.push_back(current);
-    iss.clear();
   }
-  return true;
 }
 
 void PmergeMe::fordJohnsonDeque()

@@ -8,11 +8,11 @@
 class PmergeMe
 {
   public:
-    PmergeMe();
+    PmergeMe(int argc, char** argv);
     ~PmergeMe();
 
   private:
-    bool populate(int argc, char** argv);
+    void populate(int argc, char** argv);
     void fordJohnsonDeque();
     void pairWiseSortDeque();
     void binaryInsertionDeque();
