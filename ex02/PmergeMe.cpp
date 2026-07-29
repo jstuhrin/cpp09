@@ -79,24 +79,38 @@ void PmergeMe::fordJohnsonList(int numElements, int sizeElements)
   binaryInsertionList(numElements, sizeElements);
 }
 
-std::list::iterator PmMerge::getFirst()
+std::list<int>::iterator PmergeMe::getSignificantInt(std::list<int>::iterator element, int sizeElements)
 {
-
+  std::list<int>::iterator last = element;
+  std::advance(last, sizeElements - 1);
+  return last;
 }
 
-std::list::iterator PmergeMe::getLast()
+std::list<int>::iterator PmergeMe::moveItByNElements(std::list<int>::iterator curr, int n, int sizeElements)
 {
-
+  std::list<int>::iterator newIt = curr;
+  std::advance(next, sizeElements * n);
+  return newIt;
 }
 
-void PmergeMe::swapListElements(std::list::iterator a, std::list::iterator b)
+void PmergeMe::swapListElements(std::list<int>::iterator a, std::list<int>::iterator b)
 {
   
 }
 
 void PmergeMe::pairWiseSortList(int numElements, int sizeElements)
 {
-  (void)numElements; (void)sizeElements;
+  std::list<int>::iterator left = list_.begin();
+  std::list<int>::iterator right = moveItByNElements(left, 1, sizeElements);
+  for (int i = 0; i < numElements; ++i)
+  {
+    if (getSignificantInt(left) > getSignificantInt(right))
+    {
+      swapListElements(left, right);
+    }
+  }
+  left = moveItByNElements(left, 2, sizeElements);
+  right = moveItByNElements(right, 2, sizeElements);
 }
 
 void PmergeMe::binaryInsertionList(int numElements, int sizeElements)
