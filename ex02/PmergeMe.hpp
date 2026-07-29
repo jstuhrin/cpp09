@@ -10,15 +10,22 @@ class PmergeMe
   public:
     PmergeMe(int argc, char** argv);
     ~PmergeMe();
+    void sort();
 
   private:
     void populate(int argc, char** argv);
-    void fordJohnsonDeque();
-    void pairWiseSortDeque();
-    void binaryInsertionDeque();
-    void fordJohnsonList();
-    void pairWiseSortList();
-    void binaryInsertionList();
+
+    void fordJohnsonDeque(int numElements, int sizeElements);
+    void pairWiseSortDeque(int numElements, int sizeElements);
+    void binaryInsertionDeque(int numElements, int sizeElements);
+
+    void fordJohnsonList(int numElements, int sizeElements);
+    void pairWiseSortList(int numElements, int sizeElements);
+    void binaryInsertionList(int numElements, int sizeElements);
+
+    double log2(double x);
+    int calculateMaxComparisons(int n);
+    int numComparisons_;
 
     std::deque<int> deq_;
     std::list<int> list_;

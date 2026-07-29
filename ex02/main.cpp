@@ -15,15 +15,12 @@ int main(int argc, char** argv)
   try
   {
     PmergeMe pmergeMe(argc, argv);
+    pmergeMe.sort();
   }
   catch (const std::exception &e)
   {
     std::cerr << "Error: " << e.what() << std::endl;
   }
-
-  // pmergeMe.FordJohnsonList();
-
-  // pmergeMe.FordJohnsonDeque();
 
   return 0;
 }
