@@ -79,6 +79,21 @@ void PmergeMe::fordJohnsonList(int numElements, int sizeElements)
   binaryInsertionList(numElements, sizeElements);
 }
 
+std::list::iterator PmMerge::getFirst()
+{
+
+}
+
+std::list::iterator PmergeMe::getLast()
+{
+
+}
+
+void PmergeMe::swapListElements(std::list::iterator a, std::list::iterator b)
+{
+  
+}
+
 void PmergeMe::pairWiseSortList(int numElements, int sizeElements)
 {
   (void)numElements; (void)sizeElements;
