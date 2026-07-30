@@ -20,9 +20,12 @@ class PmergeMe
     void binaryInsertionDeque(int numElements, int sizeElements);
 
     void fordJohnsonList(int numElements, int sizeElements);
+    int getSignificantIntList(std::list<int>::iterator element, int sizeElements);
     void pairWiseSortList(int numElements, int sizeElements);
     void binaryInsertionList(int numElements, int sizeElements);
 
+    
+    void printList(int sizeElements, int numElements);
     double log2(double x);
     int calculateMaxComparisons(int n);
     int numComparisons_;

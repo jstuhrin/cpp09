@@ -70,6 +70,7 @@ void PmergeMe::binaryInsertionDeque(int numElements, int sizeElements)
 
 void PmergeMe::fordJohnsonList(int numElements, int sizeElements)
 {
+  // std::cout << "fordJohnsonList(): sizeElements: " << sizeElements << " numElements: " << numElements << '\n';
   if (numElements == 1)
   {
     return;
@@ -79,44 +80,55 @@ void PmergeMe::fordJohnsonList(int numElements, int sizeElements)
   binaryInsertionList(numElements, sizeElements);
 }
 
-std::list<int>::iterator PmergeMe::getSignificantInt(std::list<int>::iterator element, int sizeElements)
+int PmergeMe::getSignificantIntList(std::list<int>::iterator element, int sizeElements)
 {
-  std::list<int>::iterator last = element;
-  std::advance(last, sizeElements - 1);
-  return last;
-}
-
-std::list<int>::iterator PmergeMe::moveItByNElements(std::list<int>::iterator curr, int n, int sizeElements)
-{
-  std::list<int>::iterator newIt = curr;
-  std::advance(next, sizeElements * n);
-  return newIt;
-}
-
-void PmergeMe::swapListElements(std::list<int>::iterator a, std::list<int>::iterator b)
-{
-  
+  std::advance(element, sizeElements - 1);
+  return *element;
 }
 
 void PmergeMe::pairWiseSortList(int numElements, int sizeElements)
 {
+  std::cout << "list before pair wise sorting: ";
+  printList(sizeElements, numElements);
+  std::cout << '\n';
+
   std::list<int>::iterator left = list_.begin();
-  std::list<int>::iterator right = moveItByNElements(left, 1, sizeElements);
-  for (int i = 0; i < numElements; ++i)
+  std::list<int>::iterator right = list_.begin();
+  std::advance(right, sizeElements);
+
+  for (int i = 0; i < numElements / 2; ++i)
   {
-    if (getSignificantInt(left) > getSignificantInt(right))
+    std::list<int>::iterator newLeft = left;
+    std::advance(newLeft, sizeElements * 2);
+    std::list<int>::iterator newRight = right;
+    std::advance(newRight, sizeElements * 2);
+    if (getSignificantIntList(left, sizeElements) > getSignificantIntList(right, sizeElements))
     {
-      swapListElements(left, right);
+      std::list<int>::iterator endRight = right;
+      std::advance(endRight, sizeElements);
+      list_.splice(left, list_, right, endRight);
     }
+    std::cout << "*left: " << *left << '\n';
+    std::cout << "*right: " << *right << '\n';
+    left = newLeft;
+    right = newRight;
   }
-  left = moveItByNElements(left, 2, sizeElements);
-  right = moveItByNElements(right, 2, sizeElements);
+
+  std::cout << "list after pair wise sorting: ";
+  printList(sizeElements, numElements);
+  std::cout << '\n';
 }
 
 void PmergeMe::binaryInsertionList(int numElements, int sizeElements)
 {
   (void)numElements; (void)sizeElements;
 }
+
+
+
+
+
+///////////////// debugging and validation ////////////////////////
 
 double PmergeMe::log2(double x)
 {
@@ -131,4 +143,37 @@ int PmergeMe::calculateMaxComparisons(int n)
     sum += std::ceil(log2((3.0 / 4.0) * k));
   }
   return sum;
+}
+
+void PmergeMe::printList(int sizeElements, int numElements)
+{
+  int elementMember = 1;
+  int num = 1;
+  for (std::list<int>::iterator it = list_.begin(); it != list_.end(); ++it)
+  {
+    if (elementMember == 1)
+    {
+      std::cout << '[';
+    }
+    std::cout << *it;
+    if (elementMember == sizeElements)
+    {
+      std::cout << ']';
+    }
+    std::cout << ' ';
+    
+    if (elementMember == sizeElements)
+    {
+      if (num == numElements)
+      {
+        break;
+      }
+      ++num;
+      elementMember = 1;
+    }
+    else
+    {
+      ++elementMember;
+    }
+  }
 }
