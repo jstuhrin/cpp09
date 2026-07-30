@@ -102,12 +102,15 @@ void PmergeMe::pairWiseSortList(int numElements, int sizeElements)
     std::advance(newLeft, sizeElements * 2);
     std::list<int>::iterator newRight = right;
     std::advance(newRight, sizeElements * 2);
+
+    ++numComparisons_;
     if (getSignificantIntList(left, sizeElements) > getSignificantIntList(right, sizeElements))
     {
       std::list<int>::iterator endRight = right;
       std::advance(endRight, sizeElements);
       list_.splice(left, list_, right, endRight);
     }
+
     std::cout << "*left: " << *left << '\n';
     std::cout << "*right: " << *right << '\n';
     left = newLeft;
