@@ -89,7 +89,7 @@ int PmergeMe::getSignificantIntList(std::list<int>::iterator element, int sizeEl
 void PmergeMe::pairWiseSortList(int numElements, int sizeElements)
 {
   std::cout << "list before pair wise sorting: ";
-  printList(sizeElements, numElements);
+  printList(list_, sizeElements, numElements);
   std::cout << '\n';
 
   std::list<int>::iterator left = list_.begin();
@@ -118,13 +118,35 @@ void PmergeMe::pairWiseSortList(int numElements, int sizeElements)
   }
 
   std::cout << "list after pair wise sorting: ";
-  printList(sizeElements, numElements);
+  printList(list_, sizeElements, numElements);
   std::cout << '\n';
 }
 
 void PmergeMe::binaryInsertionList(int numElements, int sizeElements)
 {
-  (void)numElements; (void)sizeElements;
+  std::list<int> mainChain;
+  std::list<int> bChain;
+
+  std::cout << "list_: "; printList(list_, sizeElements, numElements); std::cout << '\n';
+
+  for (int i = 0; i < numElements; ++ i)
+  {
+    std::list<int>::iterator endElement = list_.begin();
+    std::advance(endElement, sizeElements);
+    if (i % 2 == 0)
+    {
+      bChain.splice(bChain.end(), list_, list_.begin(), endElement);
+    }
+    else
+    {
+      mainChain.splice(mainChain.end(), list_, list_.begin(), endElement);
+    }
+  }
+
+
+  std::cout << "mainChain: "; printList(mainChain, sizeElements, numElements); std::cout << '\n';
+  std::cout << "bChain: "; printList(bChain, sizeElements, numElements); std::cout << '\n';
+
 }
 
 
@@ -148,11 +170,11 @@ int PmergeMe::calculateMaxComparisons(int n)
   return sum;
 }
 
-void PmergeMe::printList(int sizeElements, int numElements)
+void PmergeMe::printList(std::list<int> currList, int sizeElements, int numElements)
 {
   int elementMember = 1;
   int num = 1;
-  for (std::list<int>::iterator it = list_.begin(); it != list_.end(); ++it)
+  for (std::list<int>::iterator it = currList.begin(); it != currList.end(); ++it)
   {
     if (elementMember == 1)
     {

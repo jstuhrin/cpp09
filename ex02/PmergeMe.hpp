@@ -25,7 +25,7 @@ class PmergeMe
     void binaryInsertionList(int numElements, int sizeElements);
 
     
-    void printList(int sizeElements, int numElements);
+    void printList(std::list<int> currList, int sizeElements, int numElements);
     double log2(double x);
     int calculateMaxComparisons(int n);
     int numComparisons_;
