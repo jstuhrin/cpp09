@@ -11,6 +11,8 @@
 
 PmergeMe::PmergeMe(int argc, char** argv)
   : numComparisons_(0)
+  , currJacobsthal_(1)
+  , prevJacobsthal_(1)
 {
   populate(argc, argv);
 }
@@ -47,6 +49,13 @@ void PmergeMe::populate(int argc, char** argv)
   assert(deq_.size() == static_cast<unsigned long>(argc - 1));
 }
 
+void PmergeMe::updateJacobsthal()
+{
+  int temp = currJacobsthal_;
+  currJacobsthal_ = 2 * prevJacobsthal_ + currJacobsthal_;
+  prevJacobsthal_ = temp;
+}
+
 void PmergeMe::fordJohnsonDeque(int numElements, int sizeElements)
 {
   if (numElements == 1)
@@ -80,7 +89,7 @@ void PmergeMe::fordJohnsonList(int numElements, int sizeElements)
   binaryInsertionList(numElements, sizeElements);
 }
 
-int PmergeMe::getSignificantIntList(std::list<int>::iterator element, int sizeElements)
+int PmergeMe::getSignificantInt(std::list<int>::iterator element, int sizeElements)
 {
   std::advance(element, sizeElements - 1);
   return *element;
@@ -104,7 +113,7 @@ void PmergeMe::pairWiseSortList(int numElements, int sizeElements)
     std::advance(newRight, sizeElements * 2);
 
     ++numComparisons_;
-    if (getSignificantIntList(left, sizeElements) > getSignificantIntList(right, sizeElements))
+    if (getSignificantInt(left, sizeElements) > getSignificantInt(right, sizeElements))
     {
       std::list<int>::iterator endRight = right;
       std::advance(endRight, sizeElements);
@@ -126,6 +135,7 @@ void PmergeMe::binaryInsertionList(int numElements, int sizeElements)
 {
   std::list<int> mainChain;
   std::list<int> bChain;
+  std::list<std::list<int>::const_iterator> bChainPartners;
 
   std::cout << "list_: "; printList(list_, sizeElements, numElements); std::cout << '\n';
 
@@ -139,13 +149,18 @@ void PmergeMe::binaryInsertionList(int numElements, int sizeElements)
     }
     else
     {
+      bChainPartners.push_back(list_.begin());
       mainChain.splice(mainChain.end(), list_, list_.begin(), endElement);
     }
   }
 
 
+
+
   std::cout << "mainChain: "; printList(mainChain, sizeElements, numElements); std::cout << '\n';
   std::cout << "bChain: "; printList(bChain, sizeElements, numElements); std::cout << '\n';
+
+  list_.splice(list_.begin(), mainChain);
 
 }
 
