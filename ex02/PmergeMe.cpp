@@ -103,9 +103,9 @@ int PmergeMe::getSignificantInt(std::list<int>::const_iterator element, const in
 
 void PmergeMe::pairWiseSortList(const int numElements, const int sizeElements)
 {
-  std::cout << "list before pair wise sorting: ";
-  printList(list_, sizeElements, numElements);
-  std::cout << '\n';
+  // std::cout << "list before pair wise sorting: ";
+  // printList(list_, sizeElements, numElements);
+  // std::cout << '\n';
 
   std::list<int>::iterator left = list_.begin();
   std::list<int>::iterator right = list_.begin();
@@ -126,22 +126,24 @@ void PmergeMe::pairWiseSortList(const int numElements, const int sizeElements)
       list_.splice(left, list_, right, endRight);
     }
 
-    std::cout << "*left: " << *left << '\n';
-    std::cout << "*right: " << *right << '\n';
+    // std::cout << "*left: " << *left << '\n';
+    // std::cout << "*right: " << *right << '\n';
     left = newLeft;
     right = newRight;
   }
 
-  std::cout << "list after pair wise sorting: ";
-  printList(list_, sizeElements, numElements);
-  std::cout << '\n';
+  // std::cout << "list after pair wise sorting: ";
+  // printList(list_, sizeElements, numElements);
+  // std::cout << '\n';
 }
 
 void PmergeMe::binaryInsertionList(const int numElements, const int sizeElements)
 {
+  std::cout << "\nentering binaryInsertionList:\n";
+
   std::list<int> mainChain;
   std::list<int> bChain;
-  std::list<std::list<int>::const_iterator> bChainPartners;
+  std::list<std::list<int>::iterator> rightBounds;
 
   std::cout << "list_: "; printList(list_, sizeElements, numElements); std::cout << '\n';
 
@@ -156,39 +158,63 @@ void PmergeMe::binaryInsertionList(const int numElements, const int sizeElements
     }
     else
     {
-      bChainPartners.push_back(list_.begin());
+      rightBounds.push_back(list_.begin());
       mainChain.splice(mainChain.end(), list_, list_.begin(), endElement);
     }
   }
 
+  std::cout << "mainChain: "; printList(mainChain, sizeElements, numElements); std::cout << '\n';
+  std::cout << "bChain: "; printList(bChain, sizeElements, numElements); std::cout << '\n';
+  std::cout << "rightBounds: "; printList(rightBounds); std::cout << '\n';
+
   // prepend first bChain element to mainChain
-  std::list<int>::const_iterator endElement = bChain.begin();
+  std::list<int>::iterator endElement = bChain.begin();
   std::advance(endElement, sizeElements);
   mainChain.splice(mainChain.begin(), bChain, bChain.begin(), endElement);
   updateJacobsthal();
 
   // insert from bChain into mainChain
-  std::list<int>::const_iterator currBChainPartner = bChainPartners.begin();
-  ++currBChainPartner;
-  std::list<int>::const_iterator subsequenceBegin = bChain.begin();
-  std::advance(subsequenceBegin, -1 * sizeElements * (currJacobsthal_ - prevJacobsthal_));
-  std::list<int>const_iterator current = subsequenceBegin;
-  std::list<int>::const_iterator subsequenceEnd = bChain.begin();
-  std::list<int>::const_iterator insertPos = mainChain.begin();
-  while (prevJacobsthal_ < numElements)
-  {
+  std::list<int>::iterator rightBound = *rightBounds.begin();
+  std::advance(rightBound, sizeElements * (currJacobsthal_ - prevJacobsthal_));
+  std::list<int>::iterator subsequenceBegin = bChain.begin();
+  std::advance(subsequenceBegin, sizeElements * (currJacobsthal_ - prevJacobsthal_));
+  std::list<int>::iterator current = subsequenceBegin;
+  std::list<int>::iterator subsequenceEnd = bChain.begin();
 
+  while (true)
+  {
+    
+    std::cout << "mainChain: "; printList(mainChain, sizeElements, numElements); std::cout << '\n';
+    std::cout << "bChain: "; printList(bChain, sizeElements, numElements); std::cout << '\n';
+    std::cout << "rightBounds: "; printList(rightBounds); std::cout << '\n';
+
+    while (current != subsequenceEnd)
+    {
+      std::list<int>::iterator insertPos = std::lower_bound(mainChain.begin(), rightBound, getSignificantInt(current, sizeElements));
+      std::list<int>::iterator currentEnd = current;
+      std::advance(currentEnd, sizeElements);
+      mainChain.splice(insertPos, bChain, current, currentEnd);
+      --current;
+      --rightBound;
+    }
+    updateJacobsthal();
+    if (prevJacobsthal_ >= numElements)
+    {
+      break;
+    }
+    subsequenceEnd = subsequenceBegin;
+    std::advance(subsequenceBegin, sizeElements * (currJacobsthal_ - prevJacobsthal_));
+    current = subsequenceBegin;
+    std::advance(rightBound, sizeElements * (currJacobsthal_ - prevJacobsthal_));
   }
 
 
-
+  std::cout << "\nexiting binaryInsertionList\n";
   std::cout << "mainChain: "; printList(mainChain, sizeElements, numElements); std::cout << '\n';
   std::cout << "bChain: "; printList(bChain, sizeElements, numElements); std::cout << '\n';
-  std::cout << "bChainPartners: "; printList(bChainPartners); std::cout << '\n';
+  std::cout << "rightBounds: "; printList(rightBounds); std::cout << '\n';
 
   list_.splice(list_.begin(), mainChain);
-  list_.splice(list_.begin(), bChain);
-
 }
 
 
@@ -245,9 +271,9 @@ void PmergeMe::printList(const std::list<int>& currList, const int sizeElements,
   }
 }
 
-void PmergeMe::printList(const std::list<std::list<int>::const_iterator>& currList) const
+void PmergeMe::printList(const std::list<std::list<int>::iterator>& currList) const
 {
-  for (std::list<std::list<int>::const_iterator>::const_iterator it = currList.begin(); it != currList.end(); ++it)
+  for (std::list<std::list<int>::iterator>::const_iterator it = currList.begin(); it != currList.end(); ++it)
   {
     std::cout << **it << ' ';
   }

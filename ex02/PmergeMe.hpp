@@ -28,7 +28,7 @@ class PmergeMe
 
     
     void printList(const std::list<int>& currList, const int sizeElements, const int numElements) const;
-    void printList(const std::list<std::list<int>::const_iterator>& currList) const;
+    void printList(const std::list<std::list<int>::iterator>& currList) const;
     double log2(const double x) const;
     int calculateMaxComparisons(const int n) const;
 
