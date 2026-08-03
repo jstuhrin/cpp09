@@ -17,19 +17,20 @@ class PmergeMe
 
     void updateJacobsthal();
 
-    void fordJohnsonDeque(int numElements, int sizeElements);
-    void pairWiseSortDeque(int numElements, int sizeElements);
-    void binaryInsertionDeque(int numElements, int sizeElements);
+    void fordJohnsonDeque(const int numElements, const int sizeElements);
+    void pairWiseSortDeque(const int numElements, const int sizeElements);
+    void binaryInsertionDeque(const int numElements, const int sizeElements);
 
-    void fordJohnsonList(int numElements, int sizeElements);
-    int getSignificantInt(std::list<int>::iterator element, int sizeElements);
-    void pairWiseSortList(int numElements, int sizeElements);
-    void binaryInsertionList(int numElements, int sizeElements);
+    void fordJohnsonList(const int numElements, const int sizeElements);
+    int getSignificantInt(std::list<int>::const_iterator element, const int sizeElements) const;
+    void pairWiseSortList(const int numElements, const int sizeElements);
+    void binaryInsertionList(const int numElements, const int sizeElements);
 
     
-    void printList(std::list<int> currList, int sizeElements, int numElements);
-    double log2(double x);
-    int calculateMaxComparisons(int n);
+    void printList(const std::list<int>& currList, const int sizeElements, const int numElements) const;
+    void printList(const std::list<std::list<int>::const_iterator>& currList) const;
+    double log2(const double x) const;
+    int calculateMaxComparisons(const int n) const;
 
     std::deque<int> deq_;
     std::list<int> list_;

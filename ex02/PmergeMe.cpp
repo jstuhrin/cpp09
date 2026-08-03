@@ -56,7 +56,10 @@ void PmergeMe::updateJacobsthal()
   prevJacobsthal_ = temp;
 }
 
-void PmergeMe::fordJohnsonDeque(int numElements, int sizeElements)
+
+//////////////// Ford Johnson Deque ////////////////////
+
+void PmergeMe::fordJohnsonDeque(const int numElements, const int sizeElements)
 {
   if (numElements == 1)
   {
@@ -67,17 +70,20 @@ void PmergeMe::fordJohnsonDeque(int numElements, int sizeElements)
   binaryInsertionDeque(numElements, sizeElements);
 }
 
-void PmergeMe::pairWiseSortDeque(int numElements, int sizeElements)
+void PmergeMe::pairWiseSortDeque(const int numElements, const int sizeElements)
 {
   (void)numElements; (void)sizeElements;
 }
 
-void PmergeMe::binaryInsertionDeque(int numElements, int sizeElements)
+void PmergeMe::binaryInsertionDeque(const int numElements, const int sizeElements)
 {
   (void)numElements; (void)sizeElements;
 }
 
-void PmergeMe::fordJohnsonList(int numElements, int sizeElements)
+
+////////////// Ford Johnson List /////////////////
+
+void PmergeMe::fordJohnsonList(const int numElements, const int sizeElements)
 {
   // std::cout << "fordJohnsonList(): sizeElements: " << sizeElements << " numElements: " << numElements << '\n';
   if (numElements == 1)
@@ -89,13 +95,13 @@ void PmergeMe::fordJohnsonList(int numElements, int sizeElements)
   binaryInsertionList(numElements, sizeElements);
 }
 
-int PmergeMe::getSignificantInt(std::list<int>::iterator element, int sizeElements)
+int PmergeMe::getSignificantInt(std::list<int>::const_iterator element, const int sizeElements) const
 {
   std::advance(element, sizeElements - 1);
   return *element;
 }
 
-void PmergeMe::pairWiseSortList(int numElements, int sizeElements)
+void PmergeMe::pairWiseSortList(const int numElements, const int sizeElements)
 {
   std::cout << "list before pair wise sorting: ";
   printList(list_, sizeElements, numElements);
@@ -131,7 +137,7 @@ void PmergeMe::pairWiseSortList(int numElements, int sizeElements)
   std::cout << '\n';
 }
 
-void PmergeMe::binaryInsertionList(int numElements, int sizeElements)
+void PmergeMe::binaryInsertionList(const int numElements, const int sizeElements)
 {
   std::list<int> mainChain;
   std::list<int> bChain;
@@ -139,6 +145,7 @@ void PmergeMe::binaryInsertionList(int numElements, int sizeElements)
 
   std::cout << "list_: "; printList(list_, sizeElements, numElements); std::cout << '\n';
 
+  // populate mainChain, bChain, and list with iterators to partners
   for (int i = 0; i < numElements; ++ i)
   {
     std::list<int>::iterator endElement = list_.begin();
@@ -154,28 +161,45 @@ void PmergeMe::binaryInsertionList(int numElements, int sizeElements)
     }
   }
 
+  // prepend first bChain element to mainChain
+  std::list<int>::const_iterator endElement = bChain.begin();
+  std::advance(endElement, sizeElements);
+  mainChain.splice(mainChain.begin(), bChain, bChain.begin(), endElement);
+  updateJacobsthal();
+
+  // insert from bChain into mainChain
+  std::list<int>::const_iterator currBChainPartner = bChainPartners.begin();
+  ++currBChainPartner;
+  std::list<int>::const_iterator subsequenceBegin = bChain.begin();
+  std::advance(subsequenceBegin, -1 * sizeElements * (currJacobsthal_ - prevJacobsthal_));
+  std::list<int>const_iterator current = subsequenceBegin;
+  std::list<int>::const_iterator subsequenceEnd = bChain.begin();
+  std::list<int>::const_iterator insertPos = mainChain.begin();
+  while (prevJacobsthal_ < numElements)
+  {
+
+  }
 
 
 
   std::cout << "mainChain: "; printList(mainChain, sizeElements, numElements); std::cout << '\n';
   std::cout << "bChain: "; printList(bChain, sizeElements, numElements); std::cout << '\n';
+  std::cout << "bChainPartners: "; printList(bChainPartners); std::cout << '\n';
 
   list_.splice(list_.begin(), mainChain);
+  list_.splice(list_.begin(), bChain);
 
 }
 
 
+///////////////// validation ////////////////////////
 
-
-
-///////////////// debugging and validation ////////////////////////
-
-double PmergeMe::log2(double x)
+double PmergeMe::log2(const double x) const
 {
   return std::log(x) / std::log(2.0);
 }
 
-int PmergeMe::calculateMaxComparisons(int n)
+int PmergeMe::calculateMaxComparisons(const int n) const
 {
   int sum = 0;
   for (int k = 1; k <= n; ++k)
@@ -185,11 +209,14 @@ int PmergeMe::calculateMaxComparisons(int n)
   return sum;
 }
 
-void PmergeMe::printList(std::list<int> currList, int sizeElements, int numElements)
+
+//////////////// debugging //////////////////////
+
+void PmergeMe::printList(const std::list<int>& currList, const int sizeElements, const int numElements) const
 {
   int elementMember = 1;
   int num = 1;
-  for (std::list<int>::iterator it = currList.begin(); it != currList.end(); ++it)
+  for (std::list<int>::const_iterator it = currList.begin(); it != currList.end(); ++it)
   {
     if (elementMember == 1)
     {
@@ -215,5 +242,13 @@ void PmergeMe::printList(std::list<int> currList, int sizeElements, int numEleme
     {
       ++elementMember;
     }
+  }
+}
+
+void PmergeMe::printList(const std::list<std::list<int>::const_iterator>& currList) const
+{
+  for (std::list<std::list<int>::const_iterator>::const_iterator it = currList.begin(); it != currList.end(); ++it)
+  {
+    std::cout << **it << ' ';
   }
 }
