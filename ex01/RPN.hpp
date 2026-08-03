@@ -32,7 +32,7 @@ class RPN
     bool expectWhiteSpace(const std::string& input, std::size_t& i);
     bool acceptWhiteSpace(const std::string& input, std::size_t& i);
 
-    std::stack<DataType, std::vector<DataType> > nums_;
+    std::stack<DataType> nums_;
 };
 
 #endif
