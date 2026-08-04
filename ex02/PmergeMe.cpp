@@ -190,12 +190,14 @@ void PmergeMe::binaryInsertionList(const int numElements, const int sizeElements
 
     while (current != subsequenceEnd)
     {
-      std::list<int>::iterator insertPos = std::lower_bound(mainChain.begin(), rightBound, getSignificantInt(current, sizeElements));
+      std::list<int>::iterator insertPos = binarySearchList(mainChain, );
       std::list<int>::iterator currentEnd = current;
       std::advance(currentEnd, sizeElements);
+      std::list<int>::iterator next = current;
+      std::advance(next, -sizeElements);
       mainChain.splice(insertPos, bChain, current, currentEnd);
-      --current;
-      --rightBound;
+      current = next;
+      std::advance(rightBound, -1);
     }
     updateJacobsthal();
     if (prevJacobsthal_ >= numElements)
@@ -215,6 +217,24 @@ void PmergeMe::binaryInsertionList(const int numElements, const int sizeElements
   std::cout << "rightBounds: "; printList(rightBounds); std::cout << '\n';
 
   list_.splice(list_.begin(), mainChain);
+}
+
+std::list<int>::iterator binarySearchList(std::list<int> mainChain, std::list<int>::iterator rightBound, const int target, const int sizeElements)
+{
+  std::list<int>::iterator leftBound = mainChain.begin();
+
+  while (leftBound < rightBound)
+  {
+    std::list<int>::iterator mid = 
+  }
+}
+
+std::list<int>::iterator findMiddleSubList(std::list<int> mainChain, std::list<int>::iterator rightBound, const int sizeElements)
+{
+  std::list<int>::iterator fast = mainChain.begin();
+  std::list<int>::iterator slow = mainChain.begin();
+
+  while (fast != )
 }
 
 
