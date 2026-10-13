@@ -2,12 +2,6 @@
 #ifndef RPN_HPP
 #define RPN_HPP
 
-#ifdef USE_DOUBLE
-  typedef double DataType;
-#else
-  typedef long DataType;
-#endif
-
 #include <stack>
 #include <vector>
 #include <string>
@@ -32,7 +26,7 @@ class RPN
     bool expectWhiteSpace(const std::string& input, std::size_t& i);
     bool acceptWhiteSpace(const std::string& input, std::size_t& i);
 
-    std::stack<DataType> nums_;
+    std::stack<double> nums_;
 };
 
 #endif

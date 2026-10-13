@@ -72,15 +72,15 @@ bool RPN::performOperation(const char op)
     return false; 
   }
 
-  DataType second = nums_.top();
+  double second = nums_.top();
   nums_.pop();
-  DataType first = nums_.top();
+  double first = nums_.top();
   nums_.pop();
 
   switch (op)
   {
     case '+':
-      if (first > std::numeric_limits<DataType>::max() - second)
+      if (first > std::numeric_limits<double>::max() - second)
       {
         std::cerr << "ERROR: overflow\n";
         return false;
@@ -88,7 +88,7 @@ bool RPN::performOperation(const char op)
       nums_.push(first + second);
       break;
     case '-':
-      if (first < std::numeric_limits<DataType>::min() + second)
+      if (first < std::numeric_limits<double>::min() + second)
       {
         std::cerr << "ERROR: underflow\n";
         return false;
@@ -96,7 +96,7 @@ bool RPN::performOperation(const char op)
       nums_.push(first - second);
       break;
     case '*':
-      if (second != 0 && (first > std::numeric_limits<DataType>::max() / second || first < std::numeric_limits<DataType>::min() / second))
+      if (second != 0 && (first > std::numeric_limits<double>::max() / second || first < -std::numeric_limits<double>::max() / second))
       {
         std::cerr << "ERROR: overflow/underflow\n";
         return false;
