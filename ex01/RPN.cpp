@@ -96,7 +96,7 @@ bool RPN::performOperation(const char op)
       nums_.push(first - second);
       break;
     case '*':
-      if (first > std::numeric_limits<DataType>::max() / second || first < std::numeric_limits<DataType>::min() / second)
+      if (second != 0 && (first > std::numeric_limits<DataType>::max() / second || first < std::numeric_limits<DataType>::min() / second))
       {
         std::cerr << "ERROR: overflow/underflow\n";
         return false;
