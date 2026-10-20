@@ -110,9 +110,24 @@ void PmergeMe::pairWiseSortDeque(const int numElements, const int sizeElements)
   }
 }
 
+void PmergeMe::populateDeques(std::deque<int>& main, std::deque<int>& pending, std::deque<int>& bounds,
+                              const int numElements, const int sizeElements)
+{
+  for (int i = 0; i < numElements; ++i)
+  {
+    
+  }
+}
+
 void PmergeMe::binaryInsertionDeque(const int numElements, const int sizeElements)
 {
   (void)numElements; (void)sizeElements;
+
+  std::deque<int> main;
+  std::deque<int> pending;
+  std::deque<int> bounds;
+
+
 }
 
 
