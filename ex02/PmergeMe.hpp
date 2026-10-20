@@ -18,6 +18,8 @@ class PmergeMe
     void updateJacobsthal();
 
     void fordJohnsonDeque(const int numElements, const int sizeElements);
+    int getSignificantIntDeque(std::deque<int>::const_iterator element, const int sizeElements);
+    void swapElementsDeque(std::deque<int>::iterator leftIt, std::deque<int>::iterator rightIt, const int sizeElements);
     void pairWiseSortDeque(const int numElements, const int sizeElements);
     void binaryInsertionDeque(const int numElements, const int sizeElements);
 
@@ -27,6 +29,7 @@ class PmergeMe
     void binaryInsertionList(const int numElements, const int sizeElements);
 
     
+    void printDeque(const std::deque<int>& deq, const int sizeElements, const int numElements) const;
     void printList(const std::list<int>& currList, const int sizeElements, const int numElements) const;
     void printList(const std::list<std::list<int>::iterator>& currList) const;
     double log2(const double x) const;
@@ -35,7 +38,8 @@ class PmergeMe
     std::deque<int> deq_;
     std::list<int> list_;
 
-    int numComparisons_;
+    int numComparisonsList_;
+    int numComparisonsDeque_;
     int currJacobsthal_;
     int prevJacobsthal_;
 
