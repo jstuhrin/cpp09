@@ -23,7 +23,8 @@ class PmergeMe
     void pairWiseSortDeque(const int numElements, const int sizeElements);
     void populateDeques(std::deque<int>& main, std::deque<int>& pending, std::deque<int>& bounds,
                         const int numElements, const int sizeElements);
-    std::deque<int>::iterator elementN(std::deque<int> deq, const int n, const int sizeElements);
+    int getCurrElementIdx(const int currJacobsthal, const int numPendingElements);
+    std::deque<int>::iterator getCurrentIt(std::deque<int>& d, const int currElementIdx, const int sizeElements);
     void insertElements(std::deque<int>& mainChain, std::deque<int>& pending, std::deque<int>& bounds,
                         const int sizeElements);
     void binaryInsertionDeque(const int numElements, const int sizeElements);

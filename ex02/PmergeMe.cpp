@@ -111,42 +111,54 @@ void PmergeMe::pairWiseSortDeque(const int numElements, const int sizeElements)
 void PmergeMe::populateDeques(std::deque<int>& mainChain, std::deque<int>& pending, std::deque<int>& bounds,
                               const int numElements, const int sizeElements)
 {
-  std::deque<int>::iterator mainChainIt = deq_.begin() + sizeElements;
-  std::deque<int>::iterator pendingIt = deq_.begin();
+  std::deque<int>::iterator it = deq_.begin();
   int numPartner = 3;
-  for (int i = 0; i < numElements / 2; ++i)
+  for (int i = 1; i <= numElements; ++i)
   {
-    mainChain.insert(mainChain.end(), mainChainIt, mainChainIt + sizeElements);
-    pending.insert(pending.end(), pendingIt, pendingIt + sizeElements);
-    mainChainIt += 2 * sizeElements;
-    pendingIt += 2 * sizeElements;
-    bounds.push_back(numPartner++);
+    if (i == 1 || i % 2 == 0)
+    {
+      mainChain.insert(mainChain.end(), it, it + sizeElements);
+    }
+    else
+    {
+      pending.insert(pending.end(), it, it + sizeElements);
+      bounds.push_back(numPartner++);
+    }
+    it += sizeElements;
   }
-  mainChain.insert(mainChain.begin(), pending.begin(), pending.begin() + sizeElements);
-  pending.erase(pending.begin(), pending.begin() + sizeElements);
-  // deq_.clear();
 }
 
-std::deque<int>::iterator PmergeMe::elementN(std::deque<int> deq, const int n, const int sizeElements)
+// std::deque<int>::iterator PmergeMe::binarySearch(std::deque<int>& mainChain,  const int sizeElements)
+// {
+
+// }
+
+int PmergeMe::getCurrElementIdx(const int currJacobsthal, const int numPendingElements)
 {
-  std::cout << "elementN\n";
-  std::deque<int>::iterator nIt = deq.begin() + n * sizeElements;
-  return nIt;
+  return currJacobsthal - 2 > numPendingElements - 1 ? numPendingElements - 1 : currJacobsthal - 2;
+}
+
+std::deque<int>::iterator PmergeMe::getCurrentIt(std::deque<int>& d, const int currElementIdx, const int sizeElements)
+{
+  return d.begin() + currElementIdx * sizeElements;
 }
 
 void PmergeMe::insertElements(std::deque<int>& mainChain, std::deque<int>& pending, std::deque<int>& bounds, const int sizeElements)
 {
+  int numPendingElements = pending.size() / sizeElements;
   int currJacobsthal = 3;
   int prevJacobsthal = 1;
-  int current = currJacobsthal;
+  int currElementIdx = getCurrElementIdx(currJacobsthal, numPendingElements);
 
-  for (int pendingElements = pending.size() / sizeElements; pendingElements > 0; --pendingElements)
+  for (int n = numPendingElements; n > 0; --n)
   {
-    mainChain.insert(mainChain.end(), elementN(pending, current, sizeElements), elementN(pending, current + 1, sizeElements));
-    if (--current == prevJacobsthal)
+    std::deque<int>::iterator currIt = getCurrentIt(pending, currElementIdx, sizeElements);
+    mainChain.insert(mainChain.end(), currIt, currIt + 1);
+    --currElementIdx;
+    if (currElementIdx == prevJacobsthal - 2)
     {
       updateJacobsthal(currJacobsthal, prevJacobsthal);
-      current = currJacobsthal;
+      currElementIdx = getCurrElementIdx(currJacobsthal, numPendingElements);
     }
   }
   (void)bounds;
