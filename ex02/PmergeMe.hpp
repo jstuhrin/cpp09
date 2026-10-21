@@ -15,7 +15,7 @@ class PmergeMe
   private:
     void populate(int argc, char** argv);
 
-    void updateJacobsthal();
+    void updateJacobsthal(int& currJacobsthal, int& prevJacobsthal);
 
     void fordJohnsonDeque(const int numElements, const int sizeElements);
     int getSignificantIntDeque(std::deque<int>::const_iterator element, const int sizeElements);
@@ -23,6 +23,9 @@ class PmergeMe
     void pairWiseSortDeque(const int numElements, const int sizeElements);
     void populateDeques(std::deque<int>& main, std::deque<int>& pending, std::deque<int>& bounds,
                         const int numElements, const int sizeElements);
+    std::deque<int>::iterator elementN(std::deque<int> deq, const int n, const int sizeElements);
+    void insertElements(std::deque<int>& mainChain, std::deque<int>& pending, std::deque<int>& bounds,
+                        const int sizeElements);
     void binaryInsertionDeque(const int numElements, const int sizeElements);
 
     void fordJohnsonList(const int numElements, const int sizeElements);
@@ -42,8 +45,6 @@ class PmergeMe
 
     int numComparisonsList_;
     int numComparisonsDeque_;
-    int currJacobsthal_;
-    int prevJacobsthal_;
 
     PmergeMe(const PmergeMe& other); // private and not implemented, since there is no reason to make a copy
     PmergeMe& operator=(const PmergeMe& other);
