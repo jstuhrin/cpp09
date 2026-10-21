@@ -21,6 +21,8 @@ class PmergeMe
     int getSignificantIntDeque(std::deque<int>::const_iterator element, const int sizeElements);
     void swapElementsDeque(std::deque<int>::iterator leftIt, std::deque<int>::iterator rightIt, const int sizeElements);
     void pairWiseSortDeque(const int numElements, const int sizeElements);
+    void populateDeques(std::deque<int>& main, std::deque<int>& pending, std::deque<int>& bounds,
+                        const int numElements, const int sizeElements);
     void binaryInsertionDeque(const int numElements, const int sizeElements);
 
     void fordJohnsonList(const int numElements, const int sizeElements);
