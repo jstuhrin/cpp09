@@ -4,6 +4,7 @@
 
 #include <deque>
 #include <list>
+#include <utility>
 
 class PmergeMe
 {
@@ -21,12 +22,12 @@ class PmergeMe
     int getSignificantIntDeque(std::deque<int>::const_iterator element, const int sizeElements);
     void swapElementsDeque(std::deque<int>::iterator leftIt, std::deque<int>::iterator rightIt, const int sizeElements);
     void pairWiseSortDeque(const int numElements, const int sizeElements);
-    void populateDeques(std::deque<int>& main, std::deque<int>& pending, std::deque<int>& bounds,
-                        const int numElements, const int sizeElements);
+    void populateDeques(std::deque<int>& main, std::deque<int>& pending, std::deque<int>& bounds, const int numElements, const int sizeElements);
+    std::pair<int, std::deque<int>::iterator> binarySearch(std::deque<int>& mainChain, const int value, const int rightBound, const int sizeElements);
+    void updateBounds(std::deque<int>& bounds, const int insertPos);
     int getCurrElementIdx(const int currJacobsthal, const int numPendingElements);
     std::deque<int>::iterator getCurrentIt(std::deque<int>& d, const int currElementIdx, const int sizeElements);
-    void insertElements(std::deque<int>& mainChain, std::deque<int>& pending, std::deque<int>& bounds,
-                        const int sizeElements);
+    void insertElements(std::deque<int>& mainChain, std::deque<int>& pending, std::deque<int>& bounds, const int sizeElements);
     void binaryInsertionDeque(const int numElements, const int sizeElements);
 
     void fordJohnsonList(const int numElements, const int sizeElements);
