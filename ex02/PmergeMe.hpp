@@ -6,6 +6,7 @@
 #include <list>
 #include <vector>
 #include <utility>
+#include <ctime>
 
 class PmergeMe
 {
@@ -13,14 +14,14 @@ class PmergeMe
     PmergeMe(int argc, char** argv);
     ~PmergeMe();
     void sort();
-
+    void printResult();
 
   private:
     void populate(int argc, char** argv);
-
-    void updateJacobsthal(int& currJacobsthal, int& prevJacobsthal);
-
-    int getCurrElementIdx(const int currJacobsthal, const int numPendingElements); 
+    void updateJacobsthal(int& currJacobsthal, int& prevJacobsthal) const;
+    int getCurrElementIdx(const int currJacobsthal, const int numPendingElements) const;
+    double log2(const double x) const;
+    int calculateMaxComparisons(const int n) const;
 
     template <typename container>
     std::pair<int, typename container::iterator> binarySearch(container& mainChain, const int value, const int rightBound, const int sizeElements);
@@ -32,27 +33,32 @@ class PmergeMe
     void insertElements(container& mainChain, container& pending, container& bounds, const int sizeElements);
     template <typename container>
     void fordJohnson(container& cont, const int numElements, const int sizeElements);
+    template <typename Container>
+    void printContainer(Container& cont) const;
+    template <typename Container>
+    void printContainer(Container& cont, const int sizeElements, const int numElements) const;
+    template <typename it>
+    bool isSorted(it first, it last);
+    template <typename it>
+    bool isPairWiseSorted(it first, const int numElements, const int sizeElements);
+    template <typename Container>
+    void printPairs(Container& cont, const int sizeElements, const int numElements) const;
+    template <typename it>
+    bool isMainChainSorted(it iter, const int numElements, const int sizeElements);
 
- 
-
-    void fordJohnsonList(const int numElements, const int sizeElements);
-    // int getSignificantInt(std::list<int>::const_iterator element, const int sizeElements) const;
-    void pairWiseSortList(const int numElements, const int sizeElements);
-    void binaryInsertionList(const int numElements, const int sizeElements);
-
-    
-    void printDeque(const std::deque<int>& deq, const int sizeElements, const int numElements) const;
-    void printList(const std::list<int>& currList, const int sizeElements, const int numElements) const;
-    void printList(const std::list<std::list<int>::iterator>& currList) const;
-    double log2(const double x) const;
-    int calculateMaxComparisons(const int n) const;
-
+    std::vector<int> origin_;
     std::deque<int> deq_;
     std::vector<int> vec_;
-    std::list<int> list_;
 
     int maxComparisons_;
     int numComparisons_;
+
+    clock_t startDeq_;
+    clock_t endDeq_;
+    clock_t startVec_;
+    clock_t endVec_;
+    double elapsedMicrosecondsDeq_;
+    double elapsedMicrosecondsVec_;
 
     PmergeMe(const PmergeMe& other); // private and not implemented, since there is no reason to make a copy
     PmergeMe& operator=(const PmergeMe& other);

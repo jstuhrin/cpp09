@@ -16,6 +16,7 @@ int main(int argc, char** argv)
   {
     PmergeMe pmergeMe(argc, argv);
     pmergeMe.sort();
+    pmergeMe.printResult();
   }
   catch (const std::exception &e)
   {
