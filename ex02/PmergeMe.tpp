@@ -1,4 +1,3 @@
-
 #include <algorithm>
 #include <utility>
 #include <iostream>
@@ -127,20 +126,9 @@ void PmergeMe::insertElements(container& mainChain, container& pending, containe
 
   for (int n = numPendingElements; n > 0; --n)
   {
-    // printContainer(mainChain, sizeElements, mainChain.size() / sizeElements); std::cout << '\n';
-    // printContainer(pending, sizeElements, mainChain.size() / sizeElements); std::cout << '\n';
-    // printContainer(bounds); std::cout << '\n';
-
     typename container::iterator currIt = getCurrentIt(pending, currElementIdx, sizeElements);
     std::pair<int, typename container::iterator> result = binarySearch(mainChain, getSignificantInt(currIt, sizeElements), bounds[currElementIdx], sizeElements);
     mainChain.insert(result.second, currIt, currIt + sizeElements);
-
-    if (!isMainChainSorted(mainChain.begin(), mainChain.size() / sizeElements, sizeElements))
-    {
-      printContainer(mainChain, sizeElements, mainChain.size() / sizeElements); std::cout << '\n';
-      assert(false);
-    }
-
     updateBounds(bounds, result.first);
     --currElementIdx;
     if (currElementIdx == prevJacobsthal - 2)
