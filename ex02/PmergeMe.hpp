@@ -4,6 +4,7 @@
 
 #include <deque>
 #include <list>
+#include <vector>
 #include <utility>
 
 class PmergeMe
@@ -13,25 +14,29 @@ class PmergeMe
     ~PmergeMe();
     void sort();
 
+
   private:
     void populate(int argc, char** argv);
 
     void updateJacobsthal(int& currJacobsthal, int& prevJacobsthal);
 
-    void fordJohnsonDeque(const int numElements, const int sizeElements);
-    int getSignificantIntDeque(std::deque<int>::const_iterator element, const int sizeElements);
-    void swapElementsDeque(std::deque<int>::iterator leftIt, std::deque<int>::iterator rightIt, const int sizeElements);
-    void pairWiseSortDeque(const int numElements, const int sizeElements);
-    void populateDeques(std::deque<int>& main, std::deque<int>& pending, std::deque<int>& bounds, const int numElements, const int sizeElements);
-    std::pair<int, std::deque<int>::iterator> binarySearch(std::deque<int>& mainChain, const int value, const int rightBound, const int sizeElements);
-    void updateBounds(std::deque<int>& bounds, const int insertPos);
-    int getCurrElementIdx(const int currJacobsthal, const int numPendingElements);
-    std::deque<int>::iterator getCurrentIt(std::deque<int>& d, const int currElementIdx, const int sizeElements);
-    void insertElements(std::deque<int>& mainChain, std::deque<int>& pending, std::deque<int>& bounds, const int sizeElements);
-    void binaryInsertionDeque(const int numElements, const int sizeElements);
+    int getCurrElementIdx(const int currJacobsthal, const int numPendingElements); 
+
+    template <typename container>
+    std::pair<int, typename container::iterator> binarySearch(container& mainChain, const int value, const int rightBound, const int sizeElements);
+    template <typename it>
+    void pairWiseSort(it leftIt, const int numElements, const int sizeElements);
+    template <typename Container>
+    void binaryInsertion(Container& cont, const int numElements, const int sizeElements);
+    template <typename container>
+    void insertElements(container& mainChain, container& pending, container& bounds, const int sizeElements);
+    template <typename container>
+    void fordJohnson(container& cont, const int numElements, const int sizeElements);
+
+ 
 
     void fordJohnsonList(const int numElements, const int sizeElements);
-    int getSignificantInt(std::list<int>::const_iterator element, const int sizeElements) const;
+    // int getSignificantInt(std::list<int>::const_iterator element, const int sizeElements) const;
     void pairWiseSortList(const int numElements, const int sizeElements);
     void binaryInsertionList(const int numElements, const int sizeElements);
 
@@ -43,13 +48,16 @@ class PmergeMe
     int calculateMaxComparisons(const int n) const;
 
     std::deque<int> deq_;
+    std::vector<int> vec_;
     std::list<int> list_;
 
-    int numComparisonsList_;
-    int numComparisonsDeque_;
+    int maxComparisons_;
+    int numComparisons_;
 
     PmergeMe(const PmergeMe& other); // private and not implemented, since there is no reason to make a copy
     PmergeMe& operator=(const PmergeMe& other);
 };
+
+#include "PmergeMe.tpp"
 
 #endif

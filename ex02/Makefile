@@ -7,7 +7,7 @@ SRCS = main.cpp PmergeMe.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
-%.o: %.cpp PmergeMe.hpp
+%.o: %.cpp PmergeMe.hpp PmergeMe.tpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)

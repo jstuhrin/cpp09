@@ -14,8 +14,7 @@
 ////////// public //////////
 
 PmergeMe::PmergeMe(int argc, char** argv)
-  : numComparisonsList_(0)
-  , numComparisonsDeque_(0)
+  : numComparisons_(0)
 {
   populate(argc, argv);
 }
@@ -24,14 +23,16 @@ PmergeMe::~PmergeMe() {}
 
 void PmergeMe::sort()
 {
-  assert(calculateMaxComparisons(4) == 5);
-  assert(calculateMaxComparisons(5) == 7);
-  assert(calculateMaxComparisons(21) == 66);
-
-  fordJohnsonDeque(deq_.size(), 1);
-  // fordJohnsonList(list_.size(), 1);
+  fordJohnson(deq_, deq_.size(), 1);
+  assert(isSorted(deq_.begin(), deq_.end()));
+  assert(numComparisons_ <= maxComparisons_);
+  numComparisons_ = 0;
   
-  std::cout << "Max allowed comparisons: " << calculateMaxComparisons(deq_.size()) << "\nPerformed comparisons deque: " << numComparisonsDeque_ << "\n";
+  fordJohnson(vec_, vec_.size(), 1);
+  assert(isSorted(vec_.begin(), vec_.end()));
+  assert(numComparisons_ <= maxComparisons_);
+
+  // fordJohnsonList(list_.size(), 1);
 }
 
 ////////// private //////////
@@ -49,9 +50,9 @@ void PmergeMe::populate(int argc, char** argv)
     }
     list_.push_back(current);
     deq_.push_back(current);
+    vec_.push_back(current);
+    maxComparisons_ = calculateMaxComparisons(deq_.size());
   }
-  assert(deq_.size() == list_.size());
-  assert(deq_.size() == static_cast<unsigned long>(argc - 1));
 }
 
 void PmergeMe::updateJacobsthal(int& currJacobsthal, int& prevJacobsthal)
@@ -61,169 +62,9 @@ void PmergeMe::updateJacobsthal(int& currJacobsthal, int& prevJacobsthal)
   prevJacobsthal = temp;
 }
 
-
-//////////////// Ford Johnson Deque ////////////////////
-
-void PmergeMe::fordJohnsonDeque(const int numElements, const int sizeElements)
-{
-  if (numElements == 1)
-  {
-    return;
-  }
-  std::cout << "Num elements: " << numElements << " size elements: " << sizeElements << '\n'
-    << " deque currently: ";
-  printDeque(deq_, sizeElements, numElements);
-  std::cout << '\n';
-
-  pairWiseSortDeque(numElements, sizeElements);
-  fordJohnsonDeque(numElements / 2, sizeElements * 2);
-  binaryInsertionDeque(numElements, sizeElements);
-}
-
-int PmergeMe::getSignificantIntDeque(std::deque<int>::const_iterator element, const int sizeElements)
-{
-  std::advance(element, sizeElements - 1);
-  return *element;
-}
-
-void PmergeMe::swapElementsDeque(std::deque<int>::iterator leftIt, std::deque<int>::iterator rightIt, const int sizeElements)
-{
-  std::deque<int>::iterator endIt = rightIt + sizeElements;
-  std::rotate(leftIt, rightIt, endIt);
-}
-
-void PmergeMe::pairWiseSortDeque(const int numElements, const int sizeElements)
-{
-  std::deque<int>::iterator leftIt = deq_.begin();
-  std::deque<int>::iterator rightIt = leftIt + sizeElements;
-  for (int i = 0; i < numElements / 2; ++i)
-  {
-    ++numComparisonsDeque_;
-    if (getSignificantIntDeque(leftIt, sizeElements) > getSignificantIntDeque(rightIt, sizeElements))
-    {
-      swapElementsDeque(leftIt, rightIt, sizeElements);
-    }
-    leftIt += (2 * sizeElements);
-    rightIt += (2 * sizeElements);
-  }
-}
-
-void PmergeMe::populateDeques(std::deque<int>& mainChain, std::deque<int>& pending, std::deque<int>& bounds,
-                              const int numElements, const int sizeElements)
-{
-  std::deque<int>::iterator it = deq_.begin();
-  int bound = 3;
-  for (int i = 1; i <= numElements; ++i)
-  {
-    if (i == 1 || i % 2 == 0)
-    {
-      mainChain.insert(mainChain.end(), it, it + sizeElements);
-    }
-    else
-    {
-      pending.insert(pending.end(), it, it + sizeElements);
-      bounds.push_back(bound++);
-    }
-    it += sizeElements;
-  }
-}
-
-std::pair<int, std::deque<int>::iterator> PmergeMe::binarySearch(std::deque<int>& mainChain, const int value, const int rightBound, const int sizeElements)
-{
-  int leftElement = 1;
-  int rightElement = rightBound;
-
-  while (leftElement < rightElement)
-  {
-    int midElement = leftElement + (rightElement - leftElement) / 2;
-    ++numComparisonsDeque_;
-    if (mainChain[midElement * sizeElements - 1] < value)
-    {
-      leftElement = midElement + 1;
-    }
-    else
-    {
-      rightElement = midElement;
-    }
-  }
-  return std::make_pair(leftElement, mainChain.begin() + (leftElement - 1) * sizeElements);
-}
-
-void PmergeMe::updateBounds(std::deque<int>& bounds, const int insertPos)
-{
-  for (std::size_t i = 0; i < bounds.size(); ++i)
-  {
-    if (bounds[i] < insertPos)
-    {
-      bounds[i] += 1;
-    }
-    else
-    {
-      break;
-    }
-  }
-}
-
 int PmergeMe::getCurrElementIdx(const int currJacobsthal, const int numPendingElements)
 {
   return currJacobsthal - 2 > numPendingElements - 1 ? numPendingElements - 1 : currJacobsthal - 2;
-}
-
-std::deque<int>::iterator PmergeMe::getCurrentIt(std::deque<int>& d, const int currElementIdx, const int sizeElements)
-{
-  return d.begin() + currElementIdx * sizeElements;
-}
-
-void PmergeMe::insertElements(std::deque<int>& mainChain, std::deque<int>& pending, std::deque<int>& bounds, const int sizeElements)
-{
-  int numPendingElements = pending.size() / sizeElements;
-  int currJacobsthal = 3;
-  int prevJacobsthal = 1;
-  int currElementIdx = getCurrElementIdx(currJacobsthal, numPendingElements);
-
-  std::cout << "mainChain before insertions:\n";
-  printDeque(mainChain, sizeElements, mainChain.size() / sizeElements); std::cout << '\n';
-
-  for (int n = numPendingElements; n > 0; --n)
-  {
-    std::deque<int>::iterator currIt = getCurrentIt(pending, currElementIdx, sizeElements);
-    std::cout << "*currIt: " << *currIt << '\n';
-    std::pair<int, std::deque<int>::iterator> result = binarySearch(mainChain, *currIt, bounds[currElementIdx], sizeElements);
-    mainChain.insert(result.second, currIt, currIt + sizeElements);
-    updateBounds(bounds, result.first);
-    --currElementIdx;
-    if (currElementIdx == prevJacobsthal - 2)
-    {
-      updateJacobsthal(currJacobsthal, prevJacobsthal);
-      currElementIdx = getCurrElementIdx(currJacobsthal, numPendingElements);
-    }
-  }
-
-  std::cout << "\nmainChain after insertions: "; printDeque(mainChain, sizeElements, mainChain.size() / sizeElements); std::cout << '\n';
-}
-
-void PmergeMe::binaryInsertionDeque(const int numElements, const int sizeElements)
-{
-  std::deque<int> mainChain;
-  std::deque<int> pending;
-  std::deque<int> bounds;
-
-  populateDeques(mainChain, pending, bounds, numElements, sizeElements);
-
-  std::cout << "deq_: ";
-  printDeque(deq_, sizeElements, numElements); 
-  std::cout << "\nmainChain: ";
-  printDeque(mainChain, sizeElements, numElements);
-  std::cout << "\npending: ";
-  printDeque(pending, sizeElements, numElements);
-  std::cout << "\nbounds: ";
-  for (std::deque<int>::const_iterator it = bounds.begin(); it != bounds.end(); ++it)
-  {
-    std::cout << *it << ' ';
-  }
-  std::cout << '\n';
-
-  insertElements(mainChain, pending, bounds, sizeElements);
 }
 
 
