@@ -44,6 +44,15 @@ class PmergeMe
     void printPairs(Container& cont, const int sizeElements, const int numElements) const;
     template <typename it>
     bool isMainChainSorted(it iter, const int numElements, const int sizeElements);
+    template <typename it>
+    int getSignificantInt(it element, const int sizeElements);
+    template <typename it>
+    void swapElements(it leftIt, it rightIt, const int sizeElements);
+    template <typename it, typename container>
+    void populateContainers(it iter, container& mainChain, container& pending, container& bounds,
+                              const int numElements, const int sizeElements);
+    template <typename container>
+    typename container::iterator getCurrentIt(container& d, const int currElementIdx, const int sizeElements);
 
     std::vector<int> origin_;
     std::deque<int> deq_;

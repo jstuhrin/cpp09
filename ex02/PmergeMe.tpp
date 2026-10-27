@@ -23,21 +23,21 @@ bool PmergeMe::isSorted(it first, it last)
 }
 
 template <typename it>
-int getSignificantInt(it element, const int sizeElements)
+int PmergeMe::getSignificantInt(it element, const int sizeElements)
 {
   element += sizeElements - 1;
   return *element;
 }
 
 template <typename it>
-void swapElements(it leftIt, it rightIt, const int sizeElements)
+void PmergeMe::swapElements(it leftIt, it rightIt, const int sizeElements)
 {
   it endIt = rightIt + sizeElements;
   std::rotate(leftIt, rightIt, endIt);
 }
 
 template <typename it, typename container>
-void populateContainers(it iter, container& mainChain, container& pending, container& bounds,
+void PmergeMe::populateContainers(it iter, container& mainChain, container& pending, container& bounds,
                               const int numElements, const int sizeElements)
 {
   int bound = 3;
@@ -57,7 +57,7 @@ void populateContainers(it iter, container& mainChain, container& pending, conta
 }
 
 template <typename container>
-typename container::iterator getCurrentIt(container& d, const int currElementIdx, const int sizeElements)
+typename container::iterator PmergeMe::getCurrentIt(container& d, const int currElementIdx, const int sizeElements)
 {
   return d.begin() + currElementIdx * sizeElements;
 }
