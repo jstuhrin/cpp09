@@ -59,7 +59,7 @@ void PmergeMe::populate(int argc, char** argv)
     int current = 0;
     std::istringstream iss(argv[i]);
     iss >> current;
-    if (iss.fail() || !iss.eof() || current < 0)
+    if (iss.fail() || !iss.eof())
     {
       throw std::runtime_error(std::string("invalid input: ") + argv[i]);
     }
@@ -82,7 +82,7 @@ int PmergeMe::getCurrElementIdx(const int currJacobsthal, const int numPendingEl
   return currJacobsthal - 2 > numPendingElements - 1 ? numPendingElements - 1 : currJacobsthal - 2;
 }
 
-///////////////// validation ////////////////////////
+///////////////// validation max comparisons ////////////////////////
 
 double PmergeMe::log2(const double x) const
 {
