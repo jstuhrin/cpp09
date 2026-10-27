@@ -148,10 +148,6 @@ void PmergeMe::binaryInsertion(Container& cont, const int numElements, const int
 
   populateContainers(cont.begin(), mainChain, pending, bounds, numElements, sizeElements);
   insertElements(mainChain, pending, bounds, sizeElements);
-  if (!isMainChainSorted(mainChain.begin(), numElements, sizeElements))
-  {
-  	printContainer(mainChain, sizeElements, numElements); std::cout << '\n';
-  }
   std::swap(cont, mainChain);
   cont.insert(cont.end(), mainChain.begin() + numElements * sizeElements, mainChain.end());
 }
@@ -164,7 +160,6 @@ void PmergeMe::fordJohnson(container& cont, const int numElements, const int siz
     return;
   }
   pairWiseSort(cont.begin(), numElements, sizeElements);
-  isPairWiseSorted(cont.begin(), numElements, sizeElements);
   fordJohnson(cont, numElements / 2, sizeElements * 2);
   binaryInsertion(cont, numElements, sizeElements);
 }
@@ -176,123 +171,4 @@ void PmergeMe::printContainer(Container& cont) const
 	{
 		std::cout << *it << ' ';
 	}
-}
-
-//////////////// debugging //////////////////////
-
-template <typename Container>
-void PmergeMe::printContainer(Container& cont, const int sizeElements, const int numElements) const
-{
-  int elementMember = 1;
-  int num = 1;
-  for (typename Container::const_iterator it = cont.begin(); it != cont.end(); ++it)
-  {
-    if (elementMember == 1)
-    {
-      std::cout << '[';
-    }
-    std::cout << *it;
-    if (elementMember == sizeElements)
-    {
-      std::cout << ']';
-    }
-    std::cout << ' ';
-    
-    if (elementMember == sizeElements)
-    {
-      if (num == numElements)
-      {
-        break;
-      }
-      ++num;
-      elementMember = 1;
-    }
-    else
-    {
-      ++elementMember;
-    }
-  }
-}
-
-template <typename Container>
-void PmergeMe::printPairs(Container& cont, const int sizeElements, const int numElements) const
-{
-  int elementMember = 1;
-  int num = 1;
-  int pairMember = 1;
-  for (typename Container::const_iterator it = cont.begin(); it != cont.end(); ++it)
-  {
-    if (elementMember == 1)
-    {
-      std::cout << '[';
-    }
-    std::cout << *it;
-    if (elementMember == sizeElements)
-    {
-      std::cout << "] ";
-      if (pairMember == 1)
-      {
-    	++pairMember;
-      }
-      else
-      {
-    	std::cout << '\n';
-    	pairMember = 1;
-      }
-    }
-    else
-    {
-      std::cout << ' ';
-    }
-
-    if (elementMember == sizeElements)
-    {
-      if (num == numElements)
-      {
-        break;
-      }
-      ++num;
-      elementMember = 1;
-    }
-    else
-    {
-      ++elementMember;
-    }
-  }
-}
-
-template <typename it>
-bool PmergeMe::isPairWiseSorted(it left, const int numElements, const int sizeElements)
-{
-	it right = left + sizeElements;
-	bool result = true;
-	for (int n = 0; n < numElements / 2; ++n)
-	{
-		if (getSignificantInt(left, sizeElements) > getSignificantInt(right, sizeElements))
-		{
-			std::cerr << "isPairWiseSorted: " << getSignificantInt(left, sizeElements) << " > " << getSignificantInt(right, sizeElements) << '\n';
-			result = false;
-		}
-		left += 2 * sizeElements;
-		right += 2 * sizeElements;
-	}
-	return result;
-}
-
-template <typename it>
-bool PmergeMe::isMainChainSorted(it left, const int numElements, const int sizeElements)
-{
-	it right = left + sizeElements;
-	bool result = true;
-	for (int n = 0; n < numElements / 2; ++n)
-	{
-		if (getSignificantInt(left, sizeElements) > getSignificantInt(right, sizeElements))
-		{
-			std::cerr << "isMainChainSorted: " << getSignificantInt(left, sizeElements) << " > " << getSignificantInt(right, sizeElements) << '\n';
-			result = false;
-		}
-		left += 2 * sizeElements;
-		right += 2 * sizeElements;
-	}
-	return result;
 }

@@ -34,16 +34,8 @@ class PmergeMe
     void fordJohnson(container& cont, const int numElements, const int sizeElements);
     template <typename Container>
     void printContainer(Container& cont) const;
-    template <typename Container>
-    void printContainer(Container& cont, const int sizeElements, const int numElements) const;
     template <typename it>
     bool isSorted(it first, it last);
-    template <typename it>
-    bool isPairWiseSorted(it first, const int numElements, const int sizeElements);
-    template <typename Container>
-    void printPairs(Container& cont, const int sizeElements, const int numElements) const;
-    template <typename it>
-    bool isMainChainSorted(it iter, const int numElements, const int sizeElements);
     template <typename it>
     int getSignificantInt(it element, const int sizeElements);
     template <typename it>
