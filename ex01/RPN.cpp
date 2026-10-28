@@ -88,7 +88,7 @@ bool RPN::performOperation(const char op)
       nums_.push(first + second);
       break;
     case '-':
-      if (first < std::numeric_limits<double>::min() + second)
+      if (first < -std::numeric_limits<double>::max() + second)
       {
         std::cerr << "ERROR: underflow\n";
         return false;
