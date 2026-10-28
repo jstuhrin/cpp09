@@ -12,6 +12,7 @@ class PmergeMe
   public:
     PmergeMe(int argc, char** argv);
     ~PmergeMe();
+
     void sort();
     void printResult();
 

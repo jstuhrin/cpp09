@@ -12,7 +12,6 @@
 ////////// public //////////
 
 PmergeMe::PmergeMe(int argc, char** argv)
-  : numComparisons_(0)
 {
   populate(argc, argv);
 }
@@ -21,6 +20,8 @@ PmergeMe::~PmergeMe() {}
 
 void PmergeMe::sort()
 {
+  numComparisons_ = 0;
+
   startDeq_ = clock();
   fordJohnson(deq_, deq_.size(), 1);
   endDeq_ = clock();
@@ -46,8 +47,12 @@ void PmergeMe::printResult()
   printContainer(deq_);
   elapsedMicrosecondsDeq_ = (double)(endDeq_ - startDeq_) / CLOCKS_PER_SEC * 1000000.0;
   elapsedMicrosecondsVec_ = (double)(endVec_ - startVec_) / CLOCKS_PER_SEC * 1000000.0;
-  std::cout << "\n\nTime to process a range of " << deq_.size() << " elements with std::deque : " << elapsedMicrosecondsDeq_ << " us\n";
-  std::cout << "Time to process a range of " << vec_.size() << " elements with std::vector : " << elapsedMicrosecondsVec_ << " us\n";
+  std::cout << "\n\nTime to process a range of " << deq_.size() << " elements with std::deque : " << elapsedMicrosecondsDeq_ << " us\n"
+            << "Time to process a range of " << vec_.size() << " elements with std::vector : " << elapsedMicrosecondsVec_ << " us\n"
+            << "\nVector is sorted: " << (isSorted(vec_.begin(), vec_.end()) ? "true" : "false") << '\n'
+            << "Deque is sorted: " << (isSorted(deq_.begin(), deq_.end()) ? "true" : "false") << '\n'
+            << "\nAllowed comparisons:   " << maxComparisons_ << '\n'
+            << "Performed comparisons: " << numComparisons_ << '\n';
 }
 
 ////////// private //////////
