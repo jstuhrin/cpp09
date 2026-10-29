@@ -80,27 +80,12 @@ bool RPN::performOperation(const char op)
   switch (op)
   {
     case '+':
-      if (first > std::numeric_limits<double>::max() - second)
-      {
-        std::cerr << "ERROR: overflow\n";
-        return false;
-      }
       nums_.push(first + second);
       break;
     case '-':
-      if (first < -std::numeric_limits<double>::max() + second)
-      {
-        std::cerr << "ERROR: underflow\n";
-        return false;
-      }
       nums_.push(first - second);
       break;
     case '*':
-      if (second != 0 && (first > std::numeric_limits<double>::max() / second || first < -std::numeric_limits<double>::max() / second))
-      {
-        std::cerr << "ERROR: overflow/underflow\n";
-        return false;
-      }
       nums_.push(first * second);
       break;
     case '/':
