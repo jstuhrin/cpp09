@@ -42,8 +42,7 @@ class PmergeMe
     template <typename it>
     void swapElements(it leftIt, it rightIt, const int sizeElements);
     template <typename it, typename container>
-    void populateContainers(it iter, container& mainChain, container& pending, container& bounds,
-                              const int numElements, const int sizeElements);
+    void populateContainers(it iter, container& mainChain, container& pending, container& bounds, const int numElements, const int sizeElements);
     template <typename container>
     typename container::iterator getCurrentIt(container& d, const int currElementIdx, const int sizeElements);
 
